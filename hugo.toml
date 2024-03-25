@@ -1,0 +1,14 @@
+baseURL = 'https://www.icesoft.blog/'
+publishDir = 'docs'
+languageCode = 'es-ES'
+title = 'iCesofT blog'
+
+removePathAccents = true
+
+[taxonomies]
+tag = 'tags'
+category = 'categories'
+
+[permalinks]
+    posts = "/:year/:month/:day/:title/"
+
