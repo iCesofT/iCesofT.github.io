@@ -12,3 +12,8 @@ category = 'categories'
 [permalinks]
     posts = "/:year/:month/:day/:title/"
 
+[security]
+
+  [security.exec]
+    allow = ['^(dart-)?sass(-embedded)?$', '^go$', '^npx$', '^postcss$', '^asciidoctor$']
+
