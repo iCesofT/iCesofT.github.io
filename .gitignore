@@ -1,4 +1,4 @@
-docs/**
-public/**
-resources/_gen/**
+./docs/**
+./public/**
+./resources/_gen/**
 .hugo_build.lock
