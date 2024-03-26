@@ -1,0 +1,106 @@
+---
+author: "iCesofT"
+title: "Asciidoc Syntax Guide"
+date: "2020-08-20"
+description: "Ejemplo"
+featured: true
+draft: true
+toc: true
+tags:
+  - "AsciiDoc"
+  - "css"
+  - "html"
+  - "themes"
+  - "feature"
+categories:
+  - "themes"
+  - "syntax"
+series:
+  - "Themes Guide"
+thumbnail: "images/building.png"
+slug: "asciidoc-syntax-guide"
+---
+
+== Asciidoc
+
+Cabeceras:
+
+== H2
+=== H3
+==== H4
+
+== Párrafos
+
+Lorem itsu...
+
+== Código
+
+[source,html]
+.Código HTML
+----
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Example HTML5 Document</title><1>
+</head>
+<body>
+  <p>Test</p>
+</body>
+<!-- this line is extraneous 2Error from server (Forbidden): deployments.apps is forbidden: User "chiptest" cannot create resource "deployments" in API group "apps" in the namespace "default" -->
+</html>
+----
+
+[source,java]
+.Código Java
+----
+public class Prueba {
+
+  private static final Logger log = LoggerFactory.getLogger(Prueba.class);<1>
+
+}
+----
+
+<1> En lugar de escribir esta línea, con Lombok es posible sustituirlo con la anotación `@Slf4j`.
+
+[NOTE]
+====
+Ésta es una nota
+====
+
+[WARNING]
+====
+Éste es un warning o no?
+====
+
+[ditaa,"asciidoctor-diagram"]
+----
+                   +-------------+
+                   | Asciidoctor |-------+
+                   |   diagram   |       |
+                   +-------------+       | PNG out
+                       ^                 |
+                       | ditaa in        |
+                       |                 v
+ +--------+   +--------+----+    /---------------\
+ |        | --+ Asciidoctor +--> |               |
+ |  Text  |   +-------------+    |   Beautiful   |
+ |Document|   |   !magic!   |    |    Output     |
+ |     {d}|   |             |    |               |
+ +---+----+   +-------------+    \---------------/
+     :                                   ^
+     |          Lots of work             |
+     +-----------------------------------+
+----
+
+[plantuml, diagram-classes]     
+----
+class BlockProcessor
+class DiagramBlock
+class DitaaBlock
+class PlantUmlBlock
+
+BlockProcessor <|-- DiagramBlock
+DiagramBlock <|-- DitaaBlock
+DiagramBlock <|-- PlantUmlBlock
+----

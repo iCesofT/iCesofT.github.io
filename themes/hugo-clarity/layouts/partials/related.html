@@ -1,0 +1,13 @@
+{{ if .Site.Params.relatedPosts }}
+{{ $related := .Site.RegularPages.Related . | first 5 }}
+{{ with $related }}
+<div class="post_related">
+<h3>See Also</h3>
+<ul class="related-posts">
+	{{ range . }}
+	<li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+	{{ end }}
+</ul>
+</div>
+{{ end }}
+{{ end }}

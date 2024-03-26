@@ -1,0 +1,77 @@
+baseurl: "https://icesoft.blog/"
+relativeURLs: true
+
+title: "Blog de Fco. Javier Ahijado"
+author: "Fco. Javier Ahijado (aka iCesofT)"
+description: "Página personal de Francisco Javier Ahijado"
+copyright: "Copyright © 2016-2024 Fco. Javier Ahijado; all rights reserved"
+
+paginate: 10
+theme: "hugo-clarity"
+
+languageCode: es
+defaultContentLanguage: es
+defaultContentLanguageInSubdir: false
+enableMissingTranslationPlaceholders: false
+
+permalinks:
+  posts: /:year/:month/:slug/
+
+enableEmoji: true
+
+markup:
+  markup.highlight:
+    codeFences: true
+    guessSyntax: true
+    hl_Lines: '--'
+    lineNoStart: 1
+    lineNos: true
+    lineNumbersInTable: false
+#    noClasses: false
+    tabWidth: 2
+  markup.asciidocext:
+#    extensions: [ "asciidoctor-diagram", "asciidoctor-html5s" ]
+    workingFolderCurrent: true
+
+params:
+  author: "Francisco Javier Ahijado"
+  title: "Blog de Fco. Javier Ahijado"
+  description: "Página personal de Francisco Javier Ahijado"
+  introDescription: "Entusiasta de la tecnología y aprendizaje continuo"
+  version: "0.0.1"
+  dateformat: "2006-01-02 15:04"
+  
+  twitter: "@fjahijado"
+  largeTwitterCard: false
+
+  ga_analytics: "UA-495349-1"
+
+  numberOfTagsShown: 14
+
+  fallBackOgImage: "image/thumbnail.png"
+
+  codeMaxLines: 10
+  codeLineNumbers: true
+
+  #custom_css: [ "css/molokai.css",  "css/custom.css" ]
+  #custom_css: [ "css/custom.css" ]
+
+  mainSections: "posts"
+
+  centerLogo: false
+  logo: "logos/logo.png"
+
+  figurePositionLabel: "Figura"
+
+  mobileNavigation: left
+
+  relatedPosts: true
+  related:
+    includeNewer: false
+    indices:
+    - name: keywords
+      weight: 100
+    - name: date
+      weight: 10
+    threshold: 80
+    toLower: false

@@ -1,0 +1,33 @@
+---
+author: iCesofT
+title: "Choose Right Technology"
+description: "Cómo elegir la mejor tecnología para cada momento"
+date: 2020-08-25T00:23:37+02:00
+draft: false
+tags:
+  - Programming
+categories:
+  - Programming
+slug: "choose-right-technology"
+---
+
+En la versión anterior del blog hacía mención a un post en https://dzone.com/articles/how-to-choose-the-right-technology-for-your-projec[DZone] (https://blog.sebastian-daschner.com/entries/how_to_choose_technology[éste] es el enlace del post original) donde se aconsejan algunos puntos de cara a seleccionar la mejor tecnología para los nuevos proyectos.
+
+Las conclusiones son éstas:
+
+* Elige la tecnología con la que el equipo esté familiarizado.
+* No seas "_cool_" - juega en tu tiempo libre.
+* Elige la herramienta adecuada para el trabajo.
+* Es preferible los principios un buen diseño de software frente a la última moda.
+* No sobrecargue el número de lenguajes de programación.
+* Edúcate y educa al equipo sobre los fundamentos de la informática.
+
+Y la verdad es que hay aplicar estas conclusiones con más frecuencia. Voy a comentar la experiencia en el último proyecto en el que he colaborado.
+
+El proyecto se basa en una solución open-source basada en https://spring.io/projects/spring-boot[Spring Boot] a la que hemos añadido otras funcionalidades desarrolladas bajo microservicios y desplegadas en contenedores.
+
+En este caso, al principio del proyecto pensé: "_Vamos a desarrollar nuestros microservicios basándonos en programación reactiva_", lo que significaría utilizar https://docs.spring.io/spring/docs/current/spring-framework-reference/web-reactive.html[Spring WebFlux], https://spring.io/projects/spring-data-r2dbc[Spring Data R2DBC] y acceso a base de datos PostgreSQL con https://r2dbc.io/[R2DBC]. Bien, dicho y hecho... o no!
+
+La _pequeña_ curva de aprendizaje nos llevaba a no cumplir las fechas comprometidas de entrega dado que el equipo (un compañero y yo) no estaba familiarizado con la tecnología y dada la repercusión que tiene el proyecto, más vale no jugárnosla así que finalmente hemos desarrollado todos los servicios con Spring Boot, https://spring.io/projects/spring-data[Spring Data], https://es.wikipedia.org/wiki/Java_Persistence_API[JPA] e https://hibernate.org/[Hibernate].
+
+Ya habrá tiempo de, quizá, refactorizar alguno de los microservicios no críticos incluso a otro framework como pudiera ser https://micronaut.io/[Micronaut] o https://quarkus.io/[Quarkus].
