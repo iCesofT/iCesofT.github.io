@@ -7,7 +7,8 @@ description: "Página personal de Francisco Javier Ahijado"
 copyright: "Copyright © 2016-2024 Fco. Javier Ahijado; all rights reserved"
 
 paginate: 10
-theme: "hugo-book"
+#theme: "hugo-book"
+#theme: "hugo-clarity"
 
 languageCode: es
 defaultContentLanguage: es
