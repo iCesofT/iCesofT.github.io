@@ -57,7 +57,7 @@ jobs:
           HUGO_ENV: production
         run: |
 #           docker run --rm -v ./:/hugo-project -v ./docs:/docs fjahijado/hugo:${HUGO_VERSION} hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/" --destination /docs --theme hugo-theme-techdoc
-           docker run --rm -v ./:/hugo-project -v ./docs:/docs fjahijado/hugo:${HUGO_VERSION} hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/" --destination /docs
+           docker run --rm -v ./:/hugo-project -v ./docs:/docs fjahijado/hugo:${HUGO_VERSION} hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/" --destination /docs --theme hugo-clarity
 #          hugo \
 #            --gc \
 #            --minify \
