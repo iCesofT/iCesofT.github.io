@@ -1,0 +1,11 @@
+- item: "github"
+  url: "https://github.com/iCesofT"
+- item: "twitter"
+  url: "https://twitter.com/fjahijado"
+- item: "linkedin"
+  url: "https://www.linkedin.com/in/fjahijado"
+- item: "docker"
+  url: "https://hub.docker.com/u/fjahijado"
+- item: "rss"
+  url: "index.xml"
+  internal:  true
