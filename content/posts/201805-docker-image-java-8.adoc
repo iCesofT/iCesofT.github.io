@@ -1,0 +1,85 @@
+---
+author: iCesofT
+title: "Imagen Docker optimizada para Java 8"
+date: 2018-05-25
+description: "Imagen Docker optimizada para la ejecución de aplicaciones basadas en Java 8"
+draft: false
+featured: false
+toc: false
+categories:
+  - Java
+  - Docker
+tags:
+  - Java
+  - Docker
+slug: docker-image-java-8
+---
+
+Habiendo leído estos artículos sobre la problemática de Java 8 en entornos dockerizados:
+
+<!--more-->
+
+* https://dzone.com/articles/running-a-jvm-in-a-container-without-getting-kille[Running a JVM in a Container Without Getting Killed].
+* https://www.paradigmadigital.com/dev/como-optimizar-tu-aplicacion-java-en-docker-1-2/[Cómo optimizar tu aplicación Java en Docker (1/2)].
+* https://www.paradigmadigital.com/dev/como-optimizar-tu-aplicacion-java-en-docker-2-2/[Cómo optimizar tu aplicación Java en Docker (2/2)].
+* https://github.com/skjolber/spring-boot-maven3-jdk8-centos[Openshift docker image with s2i file and descriptor].
+
+Me decidí a crear una imagen Docker optimizada para la ejecución de aplicaciones basadas en Java 8:
+
+* https://github.com/iCesofT/docker-java[Repositorio en GitHub]: `git clone https://github.com/iCesofT/docker-java.git`.
+* https://hub.docker.com/r/fjahijado/java[Imagen en Docker Hub]: `docker pull fjahijado/java`.
+
+Lo más importante:
+[source,docker]
+----
+FROM openjdk:8-jre-alpine <1>
+
+MAINTAINER Francisco Javier Ahijado <icesoft@icesoft.blog>
+
+ENV JVM_MEM_MIN_HEAP_SIZE 256m
+ENV JVM_MEM_MAX_HEAP_SIZE 1024m
+ENV JVM_MEM_YOUNG_GEN_HEAP_SIZE 256m
+ENV JVM_MEM_STACK_SIZE 4m
+ENV JVM_MIN_HEAP_FREE_RATIO 15
+ENV JVM_MAX_HEAP_FREE_RATIO 30
+ENV JVM_COMPRESSED_CLASS_SPACE_SIZE 16m
+ENV JVM_MIN_METASPACE_EXPANSION 8m
+ENV JVM_MAX_METASPACE_EXPANSION 32m
+ENV JVM_MAX_METASPACE_SIZE 128m
+ENV JVM_INITIAL_BOOT_CLASSLOADER_METASPACE_SIZE 32m
+ENV JVM_MIN_METASPACE_FREE_RATIO 10
+ENV JVM_MAX_METASPACE_FREE_RATIO 20
+ENV JVM_RESERVED_CODE_CACHE_SIZE 24m
+ENV JVM_MAX_RAM_FRACTION 1
+
+ENV MALLOC_ARENA_MAX 2
+ENV MALLOC_MMAP_THRESHOLD 131072
+ENV MALLOC_TRIM_THRESHOLD 131072
+ENV MALLOC_TOP_PAD 131072
+ENV MALLOC_MMAP_MAX 65536
+
+ENV JAVA_OPTS -server \
+    -Djava.security.egd=file:/dev/./urandom \
+    -Djava.awt.headless=true \
+    -Dfile.encoding=UTF-8 \
+    -Xms${JVM_MEM_MIN_HEAP_SIZE} -Xmx${JVM_MEM_MAX_HEAP_SIZE} -Xmn${JVM_MEM_YOUNG_GEN_HEAP_SIZE} -Xss${JVM_MEM_STACK_SIZE} \
+    -XX:MinHeapFreeRatio=${JVM_MIN_HEAP_FREE_RATIO} -XX:MaxHeapFreeRatio=${JVM_MAX_HEAP_FREE_RATIO} \ 
+    -XX:CompressedClassSpaceSize=${JVM_COMPRESSED_CLASS_SPACE_SIZE} \
+    -XX:MinMetaspaceExpansion=${JVM_MIN_METASPACE_EXPANSION} -XX:MaxMetaspaceExpansion=${JVM_MAX_METASPACE_EXPANSION} -XX:MaxMetaspaceSize=${JVM_MAX_METASPACE_SIZE} \
+    -XX:InitialBootClassLoaderMetaspaceSize=${JVM_INITIAL_BOOT_CLASSLOADER_METASPACE_SIZE} \
+    -XX:MinMetaspaceFreeRatio=${JVM_MIN_METASPACE_FREE_RATIO} -XX:MaxMetaspaceFreeRatio=${JVM_MAX_METASPACE_FREE_RATIO} \
+    -XX:ReservedCodeCacheSize=${JVM_RESERVED_CODE_CACHE_SIZE} -XX:MaxRAMFraction=${JVM_MAX_RAM_FRACTION} \
+    -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap \ <2>
+    -XX:+UseStringDeduplication -XX:TieredStopAtLevel=1 -noverify
+
+RUN set -x \
+ && export MALLOC_ARENA_MAX=${MALLOC_ARENA_MAX} \
+ && export MALLOC_MMAP_THRESHOLD_=${MALLOC_MMAP_THRESHOLD} \
+ && export MALLOC_TRIM_THRESHOLD_=${MALLOC_TRIM_THRESHOLD} \
+ && export MALLOC_TOP_PAD_=${MALLOC_TOP_PAD} \
+ && export MALLOC_MMAP_MAX_=${MALLOC_MMAP_MAX} \
+ && export JAVA_OPTS=${JAVA_OPTS} 
+----
+
+<1> Basada en la versión JRE Alpine de OpenJDK 8.
+<2> Activación de la opción `-XX:+UseCGroupMemoryLimitForHeap` habiendo activado previamente las opciones experimentales `-XX:+UnlockExperimentalVMOptions`.
