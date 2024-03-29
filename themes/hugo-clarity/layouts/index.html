@@ -1,11 +1,3 @@
 {{ define "main" }}
-  <div class="posts">
-    {{ range first 10 .Site.RegularPages.ByDate.Reverse }}
-      <article class="post">
-        <h2><a href="{{ .Permalink }}">{{ .Title }}</a></h2>
-        <p><small>{{ .Date.Format "2 January 2006" }}</small></p>
-        <div>{{ .Summary }}</div>
-      </article>
-    {{ end }}
-  </div>
+  {{- partial "archive" . }}
 {{ end }}
