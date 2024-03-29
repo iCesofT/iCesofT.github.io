@@ -6,4 +6,5 @@
 	url = https://github.com/thingsym/hugo-theme-techdoc.git
 [submodule "themes/hugo-clarity"]
 	path = themes/hugo-clarity
-	url = https://github.com/chipzoller/hugo-clarity.git
+#	url = https://github.com/chipzoller/hugo-clarity.git
+	url = git@github.com:chipzoller/hugo-clarity.git
