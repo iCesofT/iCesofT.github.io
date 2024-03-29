@@ -57,7 +57,8 @@ params:
   #custom_css: [ "css/molokai.css",  "css/custom.css" ]
   #custom_css: [ "css/custom.css" ]
 
-  mainSections: "posts"
+  mainSections:
+    - posts
 
   centerLogo: false
   logo: "logos/logo.png"
