@@ -71,7 +71,7 @@ home = ["HTML", "RSS", "JSON"]
   mainSections = [ "posts", "blogs" ]
 
   centerLogo = false
-  logo = "image/logo.png"
+  logo = "images/logo.png"
 
   figurePositionLabel = "Figura"
 
