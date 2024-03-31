@@ -1,0 +1,58 @@
+---
+author: iCesofT
+title: "Completando enumerados"
+date: 2024-03-31T04:00:00+02:00
+description: "Completando los enumerados optimizando la recuperación"
+draft: false
+featured: false
+toc: false
+categories:
+  - Java
+tags:
+  - Java
+  - JPA
+  - Entities
+slug: completando-enumerados
+---
+
+En un link:{{< ref "201610-jpa-enumerated-entity" >}}[post anterior], recomendaba almacenar un `Integer` en la base de datos y utilizar enumerados para gestionar los posibles valores a nivel programático.
+
+En esta entrada, propongo otra forma de definir el enumerado para obtener el valor de forma más eficiente:
+
+[source,java]
+----
+@Getter
+public enum EnumeradoEjemplo {
+  VALOR1(1), VALOR2(2), VALOR3(3);
+
+  private static final Map<Integer, EnumeradoEjemplo> ENUM_MAP;
+
+  @Getter
+  private Integer id;
+
+  static {
+    ENUM_MAP = new HashMap<>();
+    for (EnumeradoEjemplo ejemplo : EnumeradoEjemplo.values()) {
+      ENUM_MAP.put(ejemplo.getId(), ejemplo);
+    }
+  }
+
+  EnumeradoEjemplo(Integer id) {
+    this.id = id;
+  }
+
+  public Integer getId() {
+    return id;
+  }
+
+  public static EnumeradoEjemplo valueOf(Integer id) {
+    EnumeradoEjemplo ejemplo = ENUM_MAP.get(id);
+    if (ejemplo == null)
+      throw new IllegalArgumentException("No existe enumerado con valor: " + id);
+
+    return ejemplo;
+  }
+
+}
+----
+
