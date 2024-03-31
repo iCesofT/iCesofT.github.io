@@ -1,3 +1,4 @@
+.vscode/
 ./docs/**
 ./public/**
 ./resources/_gen/**
