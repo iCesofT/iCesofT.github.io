@@ -7,7 +7,7 @@ theme = "hugo-clarity"
 title = 'Blog de Francisco Javier Ahijado'
 author = 'Francisco Javier Ahijado (aka iCesofT)'
 description = 'Blog personal de Francisco Javier Ahijado sobre tecnología, programación, desarrollo web, software libre, etc.'
-copyright = "Copyright © 2016-2024 Fco. Javier Ahijado; all rights reserved"
+copyright = "Fco. Javier Ahijado"
 
 languageCode = 'es-ES'
 defaultContentLanguage = "es"
