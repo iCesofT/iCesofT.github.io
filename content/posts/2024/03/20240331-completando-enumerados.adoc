@@ -21,7 +21,6 @@ En esta entrada, propongo otra forma de definir el enumerado para obtener el val
 
 [source,java]
 ----
-@Getter
 public enum EnumeradoEjemplo {
   VALOR1(1), VALOR2(2), VALOR3(3);
 
