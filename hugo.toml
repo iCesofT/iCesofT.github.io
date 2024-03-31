@@ -22,7 +22,7 @@ tag = 'tags'
 category = 'categories'
 
 [permalinks]
-  posts = "/:year/:month/:day/:slug/"
+  posts = "/:year/:month/:day/:slug"
 
 [security]
 
