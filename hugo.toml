@@ -67,6 +67,7 @@ home = ["HTML", "RSS", "JSON"]
   codeLineNumbers = true
 
   customCSS = [ "css/asciidoctor.css", "css/prism.css" ]
+  customJS = [ "js/asciidoctor.js", "js/lib/prism.js" ]
 
   mainSections = [ "posts", "blogs" ]
 
