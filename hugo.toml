@@ -1,19 +1,87 @@
-baseURL = 'https://www.icesoft.blog/'
+baseURL = 'https://wwww.icesoft.blog/'
+relativeURLs = true
 publishDir = 'docs'
+paginate = 10 
+theme = "hugo-clarity"
+
+title = 'Blog de Francisco Javier Ahijado'
+author = 'Francisco Javier Ahijado (aka iCesofT)'
+description = 'Blog personal de Francisco Javier Ahijado sobre tecnología, programación, desarrollo web, software libre, etc.'
+copyright = "Copyright © 2016-2024 Fco. Javier Ahijado; all rights reserved"
+
 languageCode = 'es-ES'
-title = 'iCesofT blog'
+defaultContentLanguage = "es"
+defaultContentLanguageInSubdir = false
+enableMissingTranslationPlaceholders = false
 
 removePathAccents = true
+enableEmoji = true
 
 [taxonomies]
 tag = 'tags'
 category = 'categories'
 
 [permalinks]
-    posts = "/:year/:month/:day/:title/"
+    posts = "/:year/:month/:slug/"
 
 [security]
 
   [security.exec]
     allow = ['^(dart-)?sass(-embedded)?$', '^go$', '^npx$', '^postcss$', '^asciidoctor$']
 
+[markup]
+  [markup.highlight]
+    codeFences = true
+    guessSyntax = true
+    hl_Lines = "--"
+    lineNoStart = 1
+    lineNos = true
+    lineNumbersInTable = false
+    tabWidth = 2
+
+  [markup.asciidocExt]
+    workingFolderCurrent = true
+    extensions = ['asciidoctor-html5s', 'asciidoctor-diagram']
+
+[outputs]
+home = ["HTML", "RSS", "JSON"]
+
+[params]
+  author = 'Francisco Javier Ahijado'
+  title = 'Blog de Francisco Javier Ahijado'
+  description = 'Blog personal de Francisco Javier Ahijado sobre tecnología, programación, desarrollo web, software libre, etc.'
+  introDescription = "Entusiasta de la tecnología y aprendizaje continuo"
+  version = 'v1.0.0'
+  dateFormat = "2006-01-02 15:04"
+
+  twitter = '@fjahijado'
+  largeTwitterCard = false
+
+  ga_analytics = "UA-495349-1"
+
+  numberOfTagsShown = 10
+
+  fallBackOgImage = "image/thumbnail.png"
+
+  codeMaxLines = 10
+  codeLineNumbers = true
+
+  customCSS = [ "css/asciidoctor.css", "css/prism.css" ]
+
+  mainSections = [ "posts", "blogs" ]
+
+  centerLogo = false
+  logo = "image/logo.png"
+
+  figurePositionLabel = "Figura"
+
+  enforceLightMode = true
+  mobileNavigation = "left"
+
+  relatedPosts = true
+
+  [params.related]
+    includeNewer = false
+    threshold = 80
+    toLower = false
+    indices = [ "keywords", "tags", "categories"]
