@@ -1,0 +1,55 @@
+---
+title: "Documentación como Código"
+date: 2020-08-23T23:00:00+02:00
+description: "Refactorización / rescritura del blog"
+draft: false
+featured: true
+toc: false
+categories:
+  - AsciiDoc
+tags:
+  - AsciiDoc
+slug: doc-as-code
+---
+
+Llevo tiempo promoviendo en los proyectos la utilización de https://docs-as-co.de/[Documentación como Código], por diversos motivos:
+
+* Es más cómodo para el equipo de desarrollo a la hora de realizar documentación técnica, dado que se puede utilizar el mismo entorno de desarrollo (IDE).
+* La documentación está almacenada en el mismo repositorio de código fuente, en modo texto, y por lo tanto es más sencillo gestionar los cambios / merge, etc.
+
+Para ello, el lenguaje que recomiendo es https://asciidoc.org/[AsciiDoc], que junto a 
+https://plantuml.com/[PlantUML] y http://ditaa.sourceforge.net/[ditaa], podemos generar la documentación incluyendo gráficos, UML,... como:
+
+[ditaa,"doc-as-code-ditaa",svg]
+.ditaa
+----
+                   +-------------+
+                   | Asciidoctor |-------+
+                   |   diagram   |       |
+                   +-------------+       | PNG out
+                       ^                 |
+                       | ditaa in        |
+                       |                 v
+ +--------+   +--------+----+    /---------------\
+ |        | --+ Asciidoctor +--> |               |
+ |  Text  |   +-------------+    |   Beautiful   |
+ |Document|   |   !magic!   |    |    Output     |
+ |     {d}|   |             |    |               |
+ +---+----+   +-------------+    \---------------/
+     :                                   ^
+     |          Lots of work             |
+     +-----------------------------------+
+----
+
+[plantuml,"doc-as-code-plantuml",svg]
+.PlantUML
+----
+class BlockProcessor
+class DiagramBlock
+class DitaaBlock
+class PlantUmlBlock
+
+BlockProcessor <|-- DiagramBlock
+DiagramBlock <|-- DitaaBlock
+DiagramBlock <|-- PlantUmlBlock
+----

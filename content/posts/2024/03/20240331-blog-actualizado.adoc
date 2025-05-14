@@ -1,0 +1,24 @@
+---
+author: iCesofT
+title: "Blog Actualizado"
+date: 2024-03-31T04:00:00+02:00
+description: "Actualización del blog"
+draft: false
+featured: false
+toc: false
+categories:
+  - AsciiDoc
+tags:
+  - AsciiDoc
+slug: blog-actualizado
+---
+
+Me he propuesto crear un post en el blog más a menudo, así que aquí estoy. 
+
+Para ello, he realizado las siguientes tareas:
+
+- He creado un https://github.com/iCesofT/iCesofT.github.io[sitio en GitHub Pages] para alojar el blog.
+- He creado una https://github.com/iCesofT/hugo-asciidoc[imagen Docker de Hugo con AsciiDoc] para utilizarla desde GitHub Actions.
+- He creado un flujo de trabajo en GitHub Actions para publicar el blog automáticamente.
+
+De este modo, me sentiré más cómodo para escribir y publicar contenido en el blog: simplemente tengo que escribir en AsciiDoc y hacer un `git push`.
