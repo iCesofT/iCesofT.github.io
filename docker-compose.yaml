@@ -1,0 +1,31 @@
+services:
+  hugo-generator:
+    image: fjahijado/hugo:0.147.3
+    container_name: hugo_generator
+    command: >
+      hugo
+      --gc
+      --minify
+      --baseURL "http://localhost:1313"
+      --destination /docs
+      --theme hugo-clarity
+    volumes:
+      - .:/hugo-project
+      - ./docs:/docs
+    working_dir: /hugo-project
+    restart: "no"
+  hugo-server:
+    image: fjahijado/hugo:0.147.3
+    container_name: hugo_server
+    command: >
+      hugo server
+      --bind 0.0.0.0
+      --baseURL "http://localhost:1313"
+      --appendPort=false
+    ports:
+      - "1313:1313"
+    volumes:
+      - .:/hugo-project
+      - ./docs:/docs
+#    working_dir: /docs
+    restart: "no"
