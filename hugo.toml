@@ -1,7 +1,6 @@
 baseURL = 'https://wwww.icesoft.blog/'
 relativeURLs = true
 publishDir = 'docs'
-paginate = 10 
 theme = "hugo-clarity"
 
 title = 'Blog de Francisco Javier Ahijado'
@@ -86,3 +85,6 @@ home = ["HTML", "RSS", "JSON"]
     threshold = 80
     toLower = false
     indices = [ "keywords", "tags", "categories"]
+
+[pagination]
+pagerSize = 10
