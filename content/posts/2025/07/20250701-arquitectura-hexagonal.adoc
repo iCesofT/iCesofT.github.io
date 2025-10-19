@@ -91,9 +91,9 @@ La arquitectura hexagonal ofrece una forma potente y clara de organizar aplicaci
 
 == Ejemplo esquemático (Java + Spring Boot)
 
-[start,plantuml]
+[plantuml,architectura-hexagonal,svg]
+.Architectura Hexagonal en Java con Spring Boot
 ----
-@startuml
 package "com.acme.myapp" {
     
     package "domain" {
@@ -118,23 +118,7 @@ package "com.acme.myapp" {
 
     package "boot"
 }
-@enduml
 ----
-
-com.acme.myapp
-├── domain
-│   ├── model
-│   ├── ports
-│   └── services
-├── application
-│   └── usecases
-├── infrastructure
-│   ├── input 
-│   │   └── rest
-│   └── output 
-│       ├── persistence
-│       └── messaging
-└── boot
 
 La estructura del proyecto se ha realizado con un proyecto Maven multimódulo:
 
