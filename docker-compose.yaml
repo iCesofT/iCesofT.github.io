@@ -1,6 +1,6 @@
 services:
   hugo-generator:
-    image: fjahijado/hugo:0.147.3
+    image: fjahijado/hugo:0.151.1
     container_name: hugo_generator
     command: >
       hugo
@@ -15,7 +15,7 @@ services:
     working_dir: /hugo-project
     restart: "no"
   hugo-server:
-    image: fjahijado/hugo:0.147.3
+    image: fjahijado/hugo:0.151.1
     container_name: hugo_server
     command: >
       hugo server
