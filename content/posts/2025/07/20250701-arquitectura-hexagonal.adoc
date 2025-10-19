@@ -1,0 +1,144 @@
+---
+author: iCesofT
+title: "Arquitectura Hexagonal"
+date: 2025-07-01T10:00:00+02:00
+description: "Definición de Arquitectura Hexagonal"
+draft: false
+featured: false
+toc: true
+categories:
+  - Java
+tags:
+  - Java
+  - ArquitecturaHexagonal
+slug: arquitectura-hexagonal
+---
+
+== ¿Qué es la Arquitectura Hexagonal?
+
+La arquitectura hexagonal, también conocida como “Puertos y Adaptadores”, es un patrón de diseño de software que busca aislar el núcleo de la aplicación de los detalles externos como bases de datos, interfaces de usuario, frameworks o servicios de infraestructura. Su objetivo es lograr una aplicación que sea fácil de probar, mantener, evolucionar y desplegar en distintos entornos.
+
+=== ¿Por qué hablamos de arquitectura?
+
+Hablamos de arquitectura porque queremos establecer una organización estructural clara del sistema que permita:
+- Reducir el acoplamiento entre componentes.
+- Mejorar la cohesión interna del código.
+- Aumentar la testabilidad del sistema.
+- Permitir el cambio de tecnologías sin impactar la lógica de negocio.
+- Favorecer la escalabilidad y mantenibilidad a largo plazo.
+
+=== ¿Por qué hexagonal?
+
+El término “hexagonal” es una representación visual arbitraria. Cada uno de los lados del hexágono representa un puerto (interfaz) de comunicación entre el núcleo de la aplicación y el mundo exterior. No implica necesariamente que haya seis puertos, sino que cualquier interacción externa debe estar mediada por un puerto y un adaptador. Este enfoque permite conectar múltiples entradas y salidas sin alterar la lógica de negocio.
+
+== Principios clave
+
+- Separación de responsabilidades: el dominio de negocio está aislado de las preocupaciones tecnológicas.
+- Inversión de dependencias: el núcleo no depende de detalles externos, sino que define interfaces (puertos) que los adaptadores deben implementar.
+- Facilidad de pruebas: al desacoplar la lógica de negocio, se pueden realizar pruebas unitarias sin necesidad de instanciar bases de datos o servidores web.
+
+== Componentes principales
+
+=== Puertos y Adaptadores
+
+- Puertos (Ports): Son interfaces definidas por el dominio para permitir la comunicación hacia y desde el exterior. Existen dos tipos:
+-- Puertos de entrada: definidos por la aplicación para recibir comandos o consultas (ej.: ejecutar un caso de uso).
+-- Puertos de salida: definidos por el dominio para invocar recursos externos (ej.: repositorios, servicios externos).
+- Adaptadores (Adapters): Implementaciones concretas de los puertos. Permiten conectar la aplicación con el mundo exterior:
+-- Adaptadores de entrada: por ejemplo, controladores REST, listeners de mensajes (Kafka, RabbitMQ), interfaces gráficas.
+-- Adaptadores de salida: por ejemplo, DAOs, clientes HTTP, productores Kafka, conectores de persistencia.
+
+== Capas de la Arquitectura
+
+=== 1. Capa de Dominio
+
+Es el corazón del sistema. Contiene:
+
+- Entidades: representan conceptos del negocio y sus invariantes.
+- Objetos de valor: encapsulan propiedades que se comportan como una unidad.
+- Casos de uso (o servicios de dominio): coordinan reglas de negocio para lograr un objetivo.
+- Interfaces de puertos de salida: definidas por el dominio para persistencia, mensajería, etc.
+
+Esta capa es completamente independiente de tecnologías, frameworks y detalles de infraestructura.
+
+=== 2. Capa de Aplicación
+
+Responsable de orquestar la ejecución de los casos de uso, coordinando interacciones entre el dominio y los adaptadores. Puede incluir:
+
+- Coordinadores de casos de uso.
+- Transformaciones de datos entre el mundo exterior y el dominio.
+- Validaciones generales (no específicas del negocio).
+
+=== 3. Capa de Infraestructura
+
+Implementa los adaptadores concretos de los puertos definidos. Contiene:
+
+- Controladores REST, controladores GraphQL, listeners de eventos.
+- Repositorios JPA, clientes HTTP, productores y consumidores Kafka.
+- Configuraciones, seguridad, logging, y mecanismos transversales.
+
+== Ventajas
+
+- Bajo acoplamiento entre capas.
+- Alta cohesión del código.
+- Sustitución sencilla de componentes externos.
+- Testing sencillo del dominio sin dependencias tecnológicas.
+- Fácil adaptación a distintos canales de comunicación.
+
+== Conclusión
+
+La arquitectura hexagonal ofrece una forma potente y clara de organizar aplicaciones complejas, especialmente útil en sistemas que deben interactuar con múltiples canales y tecnologías. Al centrarse en la lógica de negocio como el eje principal del diseño, fomenta soluciones sostenibles, robustas y adaptables a largo plazo.
+
+== Ejemplo esquemático (Java + Spring Boot)
+
+[start,plantuml]
+----
+@startuml
+package "com.acme.myapp" {
+    
+    package "domain" {
+        package "model"
+        package "ports"
+        package "services"
+    }
+
+    package "application" {
+        package "usecases"
+    }
+
+    package "infrastructure" {
+        package "input" {
+            package "rest"
+        }
+        package "output" {
+            package "persistence"
+            package "messaging"
+        }
+    }
+
+    package "boot"
+}
+@enduml
+----
+
+com.acme.myapp
+├── domain
+│   ├── model
+│   ├── ports
+│   └── services
+├── application
+│   └── usecases
+├── infrastructure
+│   ├── input 
+│   │   └── rest
+│   └── output 
+│       ├── persistence
+│       └── messaging
+└── boot
+
+La estructura del proyecto se ha realizado con un proyecto Maven multimódulo:
+
+- link:application[`application`]: Módulo que contiene la lógica de negocio, donde se implementan los casos de uso de la aplicación y se orquestan las llamadas a los adaptadores de salida.
+- link:boot[`boot`]: Módulo que contiene la configuración de la aplicación y la inicialización de la misma.
+- link:domain[`domain`]: Módulo que contiene las entidades de negocio, las interfaces de los puertos así como la definición de los casos de uso.
+- link:infrastructure[`infrastructure`]: Módulo que contiene las implementaciones concretas de los adaptadores de entrada y salida. Desde los adaptadores de entrada se hace uso de los casos de uso definidos en el módulo `application`, mientras que los adaptadores de salida implementan los puertos definidos en el módulo `domain`. 
