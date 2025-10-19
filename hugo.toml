@@ -56,7 +56,7 @@ home = ["HTML", "RSS", "JSON"]
   twitter = '@fjahijado'
   largeTwitterCard = false
 
-  ga_analytics = "UA-495349-1"
+  ga_analytics = "G-7YNGWBJVNV"
 
   numberOfTagsShown = 10
 
