@@ -1,0 +1,190 @@
+---
+author: iCesofT
+title: "Setup de un Mac para Desarrollo"
+date: 2025-12-10T10:00:00+02:00
+description: "Guía para configurar un Mac para desarrollo de software"
+draft: false
+featured: true
+toc: true
+categories:
+  - Desarrollo
+tags:
+  - Desarrollo
+  - MacOS
+slug: setup-mac
+---
+
+== Introducción
+
+En este post, exploraremos los pasos esenciales para configurar un Mac para el desarrollo de software. Cubriremos desde la instalación de herramientas básicas hasta la configuración de entornos específicos para distintos lenguajes de programación.
+
+== Herramientas Esenciales
+
+=== Homebrew
+
+https://brew.sh[Homebrew] es un gestor de paquetes para macOS que facilita la instalación de software. Para instalar Homebrew, abre la terminal y ejecuta el siguiente comando:
+
+[source,bash]
+----
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+----
+
+==== Aplicaciones recomendadas
+
+A continuación, se listan algunas aplicaciones recomendadas para instalar mediante Homebrew (para instalar, ejecutar `brew install <nombre_aplicación>`).
+
+===== Aplicaciones de control de versiones y desarrollo
+
+[qanda]
+git-flow::
+    Extensión para Git que facilita el flujo de trabajo.
+gh::
+    Herramienta de línea de comandos para interactuar con GitHub.
+sourcetree::
+    Cliente gráfico para Git y Mercurial.
+
+===== Aplicaciones de contenedores y virtualización
+
+[qanda]
+k9s::
+    Interfaz de usuario para gestionar clústeres de Kubernetes.
+kubernetes-cli::
+    Herramienta de línea de comandos para Kubernetes.
+openlens::
+    Herramienta para trabajar con entornos de Kubernetes.
+
+===== Aplicaciones de bases de datos
+
+[qanda]
+dbeaver-community::
+    Cliente de base de datos universal.
+
+===== Aplicaciones de pruebas de APIs
+
+[qanda]
+bruno::
+    Herramienta para probar APIs.
+postman::
+    Herramienta para probar APIs.
+soapui::
+    Herramienta para probar servicios web SOAP y REST.
+
+===== Aplicaciones de productividad y utilidades
+
+[qanda]
+drawio::
+    Herramienta para crear diagramas y gráficos.
+iterm2::
+    Emulador de terminal avanzado.
+keepassxc::
+    Gestor de contraseñas seguro.
+keka::
+    Herramienta para comprimir y descomprimir archivos.
+wget::
+    Herramienta para descargar archivos desde la web.
+zettlr::
+    Aplicación para tomar notas y gestionar referencias.
+zsh-completions::
+    Complementos para Zsh que mejoran la autocompletación.
+
+===== Aplicaciones de desarrollo
+
+[qanda]
+miniconda::
+    Distribución ligera de Python con gestión de entornos.
+plantuml::
+    Herramienta para crear diagramas a partir de texto.
+
+===== Aplicaciones de nube
+
+[qanda]
+awscli::
+    Herramienta de línea de comandos para gestionar servicios de AWS.
+azure-cli::
+    Herramienta de línea de comandos para gestionar servicios de Azure.
+
+===== Aplicaciones de procesamiento de datos
+
+[qanda]
+jq::
+    Herramienta para procesar JSON desde la línea de comandos.
+xq::
+    Herramienta para procesar XML desde la línea de comandos.
+
+===== Aplicaciones de IA
+
+[qanda]
+claude::
+    Herramienta de línea de comandos para interactuar con el modelo de lenguaje Claude.
+lm-studio::
+    Herramienta para gestionar modelos de lenguaje locales.
+ollama::
+    Herramienta para gestionar modelos de lenguaje locales.
+
+=== Oh My Zsh
+
+Oh My Zsh[https://ohmyz.sh] es un framework de código abierto para gestionar la configuración de Zsh. Proporciona una gran cantidad de plugins y temas que mejoran la experiencia en la terminal. Para instalar Oh My Zsh, abre la terminal y ejecuta el siguiente comando:
+
+[source,bash]
+----
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+----
+
+==== Configuración de plugins
+
+Después de instalar Oh My Zsh, puedes habilitar plugins editando el archivo `~/.zshrc`. Los plugins recomendados serían:
+
+[source,bash]
+----
+plugins=(
+  brew
+  conda
+  docker
+  docker-compose
+  gh
+  git
+  git-flow
+  iterm2
+  k9s
+  kubectl
+  macos
+  mvn
+  python
+  sdk
+  vscode
+  history-substring-search
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
+
+source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+----
+
+La lista de plugins puede ajustarse según las necesidades del desarrollador. https://github.com/ohmyzsh/ohmyzsh/wiki/Plugins[Aquí] puedes encontrar una lista completa de plugins disponibles y sus descripciones.
+
+==== Tema recomendado: powerlevel10k
+
+https://github.com/romkatv/powerlevel10k[Powerlevel10k] es un tema para Zsh que proporciona una apariencia visual atractiva y altamente personalizable para la terminal. Para instalar Powerlevel10k, puedes usar Homebrew:
+
+[source,bash]
+----
+brew install powerlevel10k
+----
+
+A continuación, se ejecuta el asistente de configuración:
+
+[source,bash]
+----
+p10k configure
+----
+
+=== SDKMAN!
+
+https://sdkman.io[SDKMAN!] es una herramienta para gestionar múltiples versiones de SDKs para lenguajes de programación como Java, Groovy, Scala, Kotlin, entre otros. Para instalar SDKMAN!, abre la terminal y ejecuta el siguiente comando:
+
+[source,bash]
+----
+curl -s "https://get.sdkman.io" | bash
+----
+
+A partir de aquí, puedes instalar y gestionar diferentes versiones de SDKs según tus necesidades. Puedes ver el listado de aplicaciones disponibles con el comando: `sdk list`.
