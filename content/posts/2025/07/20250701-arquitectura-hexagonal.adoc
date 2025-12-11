@@ -21,6 +21,7 @@ La arquitectura hexagonal, también conocida como “Puertos y Adaptadores”, e
 === ¿Por qué hablamos de arquitectura?
 
 Hablamos de arquitectura porque queremos establecer una organización estructural clara del sistema que permita:
+
 - Reducir el acoplamiento entre componentes.
 - Mejorar la cohesión interna del código.
 - Aumentar la testabilidad del sistema.
