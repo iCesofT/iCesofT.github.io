@@ -36,94 +36,94 @@ A continuación, se listan algunas aplicaciones recomendadas para instalar media
 ===== Aplicaciones de control de versiones y desarrollo
 
 [qanda]
-git-flow::
+`brew install git-flow`::
     Extensión para Git que facilita el flujo de trabajo.
-gh::
+`brew install gh`::
     Herramienta de línea de comandos para interactuar con GitHub.
-sourcetree::
-    Cliente gráfico para Git y Mercurial.
+`brew install sourcetree`::
+    https://www.sourcetreeapp.com/[Sourcetree], cliente gráfico para Git y Mercurial.
 
 ===== Aplicaciones de contenedores y virtualización
 
 [qanda]
-k9s::
-    Interfaz de usuario para gestionar clústeres de Kubernetes.
-kubernetes-cli::
+`brew install k9s`::
+    https://k9scli.io/[k9s], interfaz de usuario para gestionar clústeres de Kubernetes.
+`brew install kubernetes-cli`::
     Herramienta de línea de comandos para Kubernetes.
-openlens::
+`brew install openlens`::
     Herramienta para trabajar con entornos de Kubernetes.
 
 ===== Aplicaciones de bases de datos
 
 [qanda]
-dbeaver-community::
-    Cliente de base de datos universal.
+`brew install dbeaver-community`::
+    https://dbeaver.io/[DBeaver], cliente de base de datos universal.
 
 ===== Aplicaciones de pruebas de APIs
 
 [qanda]
-bruno::
-    Herramienta para probar APIs.
-postman::
-    Herramienta para probar APIs.
-soapui::
-    Herramienta para probar servicios web SOAP y REST.
+`brew install bruno`::
+    https://www.usebruno.com/[Bruno], herramienta para probar APIs.
+`brew install postman`::
+    https://www.postman.com/[Postman], herramienta para probar APIs.
+`brew install soapui`::
+    https://www.soapui.org/[SoapUI], herramienta para probar servicios web SOAP y REST.
 
 ===== Aplicaciones de productividad y utilidades
 
 [qanda]
-drawio::
-    Herramienta para crear diagramas y gráficos.
-iterm2::
-    Emulador de terminal avanzado.
-keepassxc::
-    Gestor de contraseñas seguro.
-keka::
-    Herramienta para comprimir y descomprimir archivos.
-wget::
+`brew install drawio`::
+    https://www.drawio.com/[Draw.io], herramienta para crear diagramas y gráficos.
+`brew install iterm2`::
+    https://iterm2.com/[iTerm2], emulador de terminal avanzado.
+`brew install keepassxc`::
+    https://keepassxc.org/[KeePassXC], gestor de contraseñas seguro.
+`brew install keka`::
+    https://www.keka.io/es/[Keka], herramienta para comprimir y descomprimir archivos.
+`brew install wget`::
     Herramienta para descargar archivos desde la web.
-zettlr::
-    Aplicación para tomar notas y gestionar referencias.
-zsh-completions::
+`brew install zettlr`::
+    https://www.zettlr.com/[Zettlr], aplicación para tomar notas y gestionar referencias.
+`brew install zsh-completions`::
     Complementos para Zsh que mejoran la autocompletación.
 
 ===== Aplicaciones de desarrollo
 
 [qanda]
-miniconda::
-    Distribución ligera de Python con gestión de entornos.
-plantuml::
+`brew install miniconda`::
+    https://www.anaconda.com/docs/getting-started/miniconda/main[Miniconda], distribución ligera de Python con gestión de entornos.
+`brew install plantuml`::
     Herramienta para crear diagramas a partir de texto.
 
 ===== Aplicaciones de nube
 
 [qanda]
-awscli::
-    Herramienta de línea de comandos para gestionar servicios de AWS.
-azure-cli::
+`brew install awscli`::
+    https://aws.amazon.com/es/cli/[AWS CLI], herramienta de línea de comandos para gestionar servicios de AWS.
+`brew install azure-cli`::
     Herramienta de línea de comandos para gestionar servicios de Azure.
 
 ===== Aplicaciones de procesamiento de datos
 
 [qanda]
-jq::
+`brew install jq`::
     Herramienta para procesar JSON desde la línea de comandos.
-xq::
+`brew install xq`::
     Herramienta para procesar XML desde la línea de comandos.
 
 ===== Aplicaciones de IA
 
 [qanda]
-claude::
-    Herramienta de línea de comandos para interactuar con el modelo de lenguaje Claude.
-lm-studio::
-    Herramienta para gestionar modelos de lenguaje locales.
-ollama::
-    Herramienta para gestionar modelos de lenguaje locales.
+`brew install claude`::
+    https://claude.ai/[Claude], herramienta de línea de comandos para interactuar con el modelo de lenguaje Claude.
+`brew install lm-studio`::
+    https://lmstudio.ai/[LM Studio], herramienta para gestionar modelos de lenguaje locales.
+`brew install ollama`::
+    https://ollama.com/[Ollama], herramienta para gestionar modelos de lenguaje locales.
 
 === Oh My Zsh
 
-Oh My Zsh[https://ohmyz.sh] es un framework de código abierto para gestionar la configuración de Zsh. Proporciona una gran cantidad de plugins y temas que mejoran la experiencia en la terminal. Para instalar Oh My Zsh, abre la terminal y ejecuta el siguiente comando:
+https://ohmyz.sh[Oh My Zsh] es un framework de código abierto para gestionar la configuración de Zsh. Proporciona una gran cantidad de plugins y temas que mejoran la experiencia en la terminal. Para instalar Oh My Zsh, abre la terminal y ejecuta el siguiente comando:
 
 [source,bash]
 ----
@@ -188,3 +188,19 @@ curl -s "https://get.sdkman.io" | bash
 ----
 
 A partir de aquí, puedes instalar y gestionar diferentes versiones de SDKs según tus necesidades. Puedes ver el listado de aplicaciones disponibles con el comando: `sdk list`.
+
+==== Herramientas recomendadas
+
+A continuación las herramientas recomendadas para instalar mediante SDKMAN! (para instalar, ejecutar `sdk install <nombre_herramienta> [<versión]`).
+
+[qanda]
+`sdk install java 25.0.1-librca`::
+    Plataforma de desarrollo Java versión 25.
+`sdk install java 21.0.9-librca`::
+    Plataforma de desarrollo Java versión 21.
+`sdk install java 17.0.17-librca`::
+    Plataforma de desarrollo Java versión 17.
+`sdk install maven`::
+    Herramienta para gestionar proyectos y dependencias Maven.
+`sdk install mcs`::
+    Herramienta para buscar y gestionar dependencias de proyectos Maven.
