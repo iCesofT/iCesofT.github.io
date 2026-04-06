@@ -1,0 +1,23 @@
+---
+author: iCesofT
+title: "Arquitectura Hexagonal - Catálogo Geográfico"
+date: 2026-04-07T10:00:00+02:00
+description: "Ejemplo práctico de Arquitectura Hexagonal"
+draft: false
+featured: false
+toc: true
+categories:
+  - Java
+tags:
+  - Java
+  - ArquitecturaHexagonal
+slug: arquitectura-hexagonal-catalogo
+---
+
+== Ejemplo demostrativo de Arquitectura Hexagonal
+
+Después de casi un año sin publicar nada, volvemos a la carga con un nuevo artículo sobre un ejemplo completo de Arquitectura Hexagonal, de la cual ya hablé en el anterior [post](https://icesoft.github.io/2025/07/01/arquitectura-hexagonal.html).
+
+Este **proyecto de demostración** ofrece un catálogo geográfico para entidades españolas. Esta implementación sirve como ejemplo de buenas prácticas en el desarrollo de microservicios modernos con Spring Boot y Java.
+
+Puedes ver el código completo en el [siguiente repositorio de GitHub](https://github.com/icesoft/arquitectura-hexagonal.git).
