@@ -16,8 +16,8 @@ slug: arquitectura-hexagonal-catalogo
 
 == Ejemplo demostrativo de Arquitectura Hexagonal
 
-Después de casi un año sin publicar nada, volvemos a la carga con un nuevo artículo sobre un ejemplo completo de Arquitectura Hexagonal, de la cual ya hablé en el anterior [post](https://icesoft.github.io/2025/07/01/arquitectura-hexagonal.html).
+Después de casi un año sin publicar nada, volvemos a la carga con un nuevo artículo sobre un ejemplo completo de Arquitectura Hexagonal, de la cual ya hablé en el link:{{< ref "20250701-arquitectura-hexagonal" >}}[post anterior].
 
 Este **proyecto de demostración** ofrece un catálogo geográfico para entidades españolas. Esta implementación sirve como ejemplo de buenas prácticas en el desarrollo de microservicios modernos con Spring Boot y Java.
 
-Puedes ver el código completo en el [siguiente repositorio de GitHub](https://github.com/icesoft/arquitectura-hexagonal.git).
+Puedes ver el código completo en el https://github.com/icesoft/arquitectura-hexagonal.git[siguiente repositorio de GitHub].
