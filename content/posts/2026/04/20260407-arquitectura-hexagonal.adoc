@@ -14,6 +14,10 @@ categories:
   - arquitectura
   - backend
 draft: false
+slug: catalog-service-microservicio-con-arquitectura-hexagonal
+aliases:
+  - arquitectura-hexagonal-catalogo
+
 ---
 = Catalog Service: Arquitectura Hexagonal con Java 25 y Spring Boot 4
 Francisco Javier Ahijado <https://github.com/iCesofT>
@@ -30,18 +34,6 @@ Francisco Javier Ahijado <https://github.com/iCesofT>
 [.lead]
 Microservicio empresarial de catálogo geográfico desarrollado con *Arquitectura Hexagonal* (Ports & Adapters), *Java 25* y *Spring Boot 4.0.5*.
 Expone datos de referencia (países, comunidades autónomas, provincias, localidades y tipos de vía) mediante dos protocolos simultáneos: *API REST* y *gRPC*.
-
-image:https://img.shields.io/github/last-commit/iCesofT/arquitectura-hexagonal?style=flat[Last Commit,link=https://github.com/iCesofT/arquitectura-hexagonal/commits/]
-image:https://img.shields.io/github/issues/iCesofT/arquitectura-hexagonal?style=flat[Open Issues,link=https://github.com/iCesofT/arquitectura-hexagonal/issues]
-image:https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg?style=flat[License,link=https://github.com/iCesofT/arquitectura-hexagonal/blob/master/LICENSE]
-
-image:https://img.shields.io/badge/Java-25-blue?logo=java&logoColor=white[Java 25]
-image:https://img.shields.io/badge/Spring%20Boot-4.0.5-brightgreen?logo=spring-boot&logoColor=white[Spring Boot 4.0.5]
-image:https://img.shields.io/badge/gRPC-1.80.0-orange?logo=grpc&logoColor=white[gRPC 1.80.0]
-image:https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql&logoColor=white[PostgreSQL 16]
-image:https://img.shields.io/badge/Architecture-Hexagonal-yellow[Hexagonal Architecture]
-
-''''
 
 == Código fuente
 
