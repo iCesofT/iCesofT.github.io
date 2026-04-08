@@ -1,23 +1,1179 @@
 ---
 author: iCesofT
-title: "Arquitectura Hexagonal - Catálogo Geográfico"
-date: 2026-04-07T10:00:00+02:00
-description: "Ejemplo práctico de Arquitectura Hexagonal"
-draft: false
-featured: false
-toc: true
-categories:
-  - Java
+title: "Catalog Service: Microservicio con Arquitectura Hexagonal"
+date: 2026-04-07
+description: "Microservicio de catálogo geográfico con Arquitectura Hexagonal (Ports & Adapters), Java 25, Spring Boot 4 y doble protocolo REST/gRPC."
 tags:
-  - Java
-  - ArquitecturaHexagonal
-slug: arquitectura-hexagonal-catalogo
+  - java
+  - spring-boot
+  - arquitectura-hexagonal
+  - microservicios
+  - grpc
+  - postgresql
+categories:
+  - arquitectura
+  - backend
+draft: false
 ---
+= Catalog Service: Arquitectura Hexagonal con Java 25 y Spring Boot 4
+Francisco Javier Ahijado <https://github.com/iCesofT>
+2026-04-07
+:toc: left
+:toclevels: 3
+:toc-title: Contenido
+:sectnums:
+:sectanchors:
+:icons: font
+:source-highlighter: rouge
+:rouge-style: github
 
-== Ejemplo demostrativo de Arquitectura Hexagonal
+[.lead]
+Microservicio empresarial de catálogo geográfico desarrollado con *Arquitectura Hexagonal* (Ports & Adapters), *Java 25* y *Spring Boot 4.0.5*.
+Expone datos de referencia (países, comunidades autónomas, provincias, localidades y tipos de vía) mediante dos protocolos simultáneos: *API REST* y *gRPC*.
 
-Después de casi un año sin publicar nada, volvemos a la carga con un nuevo artículo sobre un ejemplo completo de Arquitectura Hexagonal, de la cual ya hablé en el link:{{< ref "20250701-arquitectura-hexagonal" >}}[post anterior].
+image:https://img.shields.io/github/last-commit/iCesofT/arquitectura-hexagonal?style=flat[Last Commit,link=https://github.com/iCesofT/arquitectura-hexagonal/commits/]
+image:https://img.shields.io/github/issues/iCesofT/arquitectura-hexagonal?style=flat[Open Issues,link=https://github.com/iCesofT/arquitectura-hexagonal/issues]
+image:https://img.shields.io/badge/License-MPL%202.0-brightgreen.svg?style=flat[License,link=https://github.com/iCesofT/arquitectura-hexagonal/blob/master/LICENSE]
 
-Este **proyecto de demostración** ofrece un catálogo geográfico para entidades españolas. Esta implementación sirve como ejemplo de buenas prácticas en el desarrollo de microservicios modernos con Spring Boot y Java.
+image:https://img.shields.io/badge/Java-25-blue?logo=java&logoColor=white[Java 25]
+image:https://img.shields.io/badge/Spring%20Boot-4.0.5-brightgreen?logo=spring-boot&logoColor=white[Spring Boot 4.0.5]
+image:https://img.shields.io/badge/gRPC-1.80.0-orange?logo=grpc&logoColor=white[gRPC 1.80.0]
+image:https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql&logoColor=white[PostgreSQL 16]
+image:https://img.shields.io/badge/Architecture-Hexagonal-yellow[Hexagonal Architecture]
 
-Puedes ver el código completo en el https://github.com/icesoft/arquitectura-hexagonal.git[siguiente repositorio de GitHub].
+''''
+
+== Código fuente
+
+El repositorio completo está disponible en https://github.com/iCesofT/arquitectura-hexagonal[GitHub: iCesofT/arquitectura-hexagonal].
+
+''''
+
+== Introducción
+
+`catalog-service` es un microservicio de catálogo geográfico que expone datos de referencia
+mediante dos protocolos:
+
+* *REST* — API HTTP/1.1 y HTTP/2 generada a partir de especificaciones *OpenAPI 3.0*
+* *gRPC* — API binaria de alta eficiencia generada a partir de *Protocol Buffers*
+
+El servicio está diseñado para entornos de producción de alta concurrencia,
+incorporando múltiples estrategias de optimización.
+
+=== Objetivos de diseño
+
+[cols="1,3", options="header"]
+|===
+| Objetivo | Descripción
+
+| *Mantenibilidad*
+| Código organizado en capas bien definidas mediante Arquitectura Hexagonal, con dependencias unidireccionales estrictamente controladas.
+
+| *Testeabilidad*
+| Cada capa es testable de forma independiente. El dominio no tiene dependencia con ningún framework.
+
+| *Rendimiento*
+| Caché de dos niveles (Caffeine + Redis), pool de conexiones HikariCP, virtual threads de Java y serialización optimizada con Jackson Blackbird.
+
+| *Observabilidad*
+| Métricas con Micrometer/Prometheus, trazabilidad OTLP y actuator endpoints para health checks y readiness probes.
+
+| *Seguridad*
+| Contenedor ejecutado con usuario no root, imagen Alpine minimalista, dependencias auditadas con OWASP Dependency-Check.
+
+| *Portabilidad*
+| Docker multi-stage con capas optimizadas mediante Spring Boot Layertools, despliegue local con `docker-compose`.
+|===
+
+=== Stack tecnológico
+
+[cols="2,2,3", options="header"]
+|===
+| Categoría | Tecnología | Rol
+
+| *Runtime*
+| Java 25
+| Virtual threads, ZGC, rendimiento mejorado
+
+| *Framework*
+| Spring Boot 4.0.5
+| Contenedor de IoC, autoconfiguración, actuator
+
+| *Persistencia*
+| Spring Data JPA + Hibernate 7
+| ORM con soporte para batch DML y proxies de mejora
+
+| *Base de datos*
+| PostgreSQL 16
+| Base de datos relacional principal
+
+| *Migraciones*
+| Liquibase 5
+| Control de versiones del esquema de base de datos
+
+| *Caché L1*
+| Caffeine 3
+| Caché local en memoria (heap), acceso sub-microsegundo
+
+| *Caché L2*
+| Redis 8
+| Caché distribuida, compartida entre instancias
+
+| *API REST*
+| OpenAPI 3.0 + Spring MVC
+| Generación de código a partir de contrato
+
+| *API gRPC*
+| Protocol Buffers 4 + Spring gRPC
+| Comunicación binaria eficiente entre servicios
+
+| *Mapeo*
+| MapStruct 1.6
+| Generación de mappers en tiempo de compilación
+
+| *Logging*
+| Log4j2 + LMAX Disruptor
+| Logging asíncrono de ultra-baja latencia
+
+| *Métricas*
+| Micrometer + Prometheus
+| Instrumentación y exportación de métricas
+
+| *Contenedor*
+| Docker + Alpine + ZGC
+| Imagen minimalista optimizada para producción
+|===
+
+''''
+
+== Arquitectura Hexagonal
+
+=== ¿Qué es?
+
+La *Arquitectura Hexagonal* (también conocida como *Ports & Adapters*, propuesta por
+Alistair Cockburn en 2005) organiza el software en torno a la lógica de negocio,
+aislándola completamente de los detalles técnicos (base de datos, frameworks,
+protocolos de red, etc.) mediante el uso de *puertos* e *interfaces de adaptación*.
+
+[quote, Alistair Cockburn]
+____
+Permite que una aplicación sea controlada igualmente por usuarios, programas, tests
+automatizados o scripts batch, y que se desarrolle y pruebe en aislamiento de sus
+eventuales dispositivos de tiempo de ejecución y bases de datos.
+____
+
+=== Regla de dependencias
+
+Las dependencias siempre apuntan hacia el interior del hexágono.
+Nunca desde el dominio hacia la infraestructura.
+
+[source,text]
+----
+  ┌─────────────────────────────────────────────┐
+  │             INFRAESTRUCTURA                 │
+  │   ┌─────────────────────────────────────┐   │
+  │   │           APLICACIÓN                │   │
+  │   │   ┌─────────────────────────────┐   │   │
+  │   │   │          DOMINIO            │   │   │
+  │   │   │   (núcleo, sin framework)   │   │   │
+  │   │   └─────────────────────────────┘   │   │
+  │   └─────────────────────────────────────┘   │
+  └─────────────────────────────────────────────┘
+
+  Las flechas de dependencia apuntan siempre hacia dentro:
+  Infraestructura → Aplicación → Dominio
+----
+
+=== Puertos y adaptadores
+
+[cols="1,2,3", options="header"]
+|===
+| Concepto | Descripción | Ejemplo en catalog-service
+
+| *Puerto de entrada*
+| Interfaz que define lo que la aplicación puede hacer (casos de uso).
+| `GetPaisByIdUseCase`, `GetPaginatedPaisesUseCase`
+
+| *Puerto de salida*
+| Interfaz que define lo que la aplicación necesita del exterior (repositorios).
+| `PaisRepositoryPort`, `ComunidadAutonomaRepositoryPort`
+
+| *Adaptador primario*
+| Implementación que conduce a la aplicación desde el exterior (REST, gRPC, CLI).
+| `PaisesApiDelegateImpl`, servicio gRPC
+
+| *Adaptador secundario*
+| Implementación que conecta la aplicación al exterior (BD, caché, mensajería).
+| `PaisRepositoryAdapter`, `CacheConfiguration`
+|===
+
+=== Estructura de capas
+
+[source,text]
+----
+catalog-service/
+├── catalog-domain/            ← DOMINIO: entidades, puertos, excepciones
+│   └── (sin dependencias de framework)
+├── catalog-application/       ← APLICACIÓN: casos de uso, mediator
+│   └── (depende sólo de catalog-domain)
+├── catalog-infrastructure/    ← INFRAESTRUCTURA: adaptadores técnicos
+│   ├── catalog-infrastructure-api-rest/     (adaptador REST entrante)
+│   ├── catalog-infrastructure-api-grpc/     (adaptador gRPC entrante)
+│   └── catalog-infrastructure-persistence-jpa/ (adaptador BD saliente)
+└── catalog-bootstrap/         ← BOOTSTRAP: arranque, configuración Spring Boot
+    └── (ensambla todos los módulos)
+----
+
+=== Flujo de una petición `GET /paises/{id}`
+
+[source,text]
+----
+Cliente HTTP
+    │
+    ▼
+PaisesApiDelegateImpl (Adaptador REST)
+    │  GET /paises/{id}
+    ▼
+GetPaisByIdUseCase (Puerto de entrada)
+    │
+    ▼
+GetPaisByIdUseCaseImpl (Caso de uso)
+    │
+    ▼
+PaisRepositoryPort (Puerto de salida)
+    │
+    ▼
+PaisRepositoryAdapter (Adaptador de persistencia)
+    │
+    ▼
+JpaPaisRepository (Spring Data JPA)
+    │  SELECT * FROM paises WHERE id = ?
+    ▼
+PostgreSQL 16
+    │  País encontrado
+    ▼  (respuesta sube por el mismo camino)
+HTTP 200 OK + PaisDTO
+----
+
+=== Beneficios obtenidos
+
+[cols="1,3", options="header"]
+|===
+| Beneficio | Evidencia en el proyecto
+
+| *Testeabilidad*
+| La capa de dominio y aplicación se prueban sin Spring ni base de datos (tests en `catalog-application` con mocks).
+
+| *Intercambiabilidad*
+| Se puede cambiar PostgreSQL por CockroachDB sin modificar dominio ni aplicación (existe perfil `application-cockroach.yaml`).
+
+| *Independencia de protocolo*
+| El mismo caso de uso se sirve tanto por REST (`PaisesApiDelegateImpl`) como por gRPC, sin duplicar lógica.
+
+| *Evolución independiente*
+| Cada módulo Maven puede evolucionar, desplegarse y testearse de forma independiente.
+
+| *Comprensión del código*
+| La estructura de paquetes refleja el dominio de negocio, no la tecnología.
+|===
+
+=== Verificación arquitectural con ArchUnit
+
+El proyecto incorpora *ArchUnit* (`arch-unit-maven-plugin`) para validar
+automáticamente las reglas de dependencia en cada build:
+
+[source,java]
+----
+// Las dependencias entre capas se validan en CI/CD:
+// ✅ Dominio no depende de aplicación ni infraestructura
+// ✅ Aplicación sólo depende de dominio
+// ✅ Infraestructura puede depender de aplicación y dominio
+// ✅ Bootstrap puede depender de todos los módulos
+----
+
+NOTE: El plugin `arch-unit-maven-plugin` se ejecuta automáticamente en la fase `verify`
+de Maven, impidiendo que se mergee cualquier código que rompa las restricciones de arquitectura.
+
+''''
+
+== Módulos Maven
+
+=== Estructura multi-módulo
+
+[source,text]
+----
+catalog-service/                          (POM padre)
+├── catalog-domain/                       (módulo de dominio)
+├── catalog-application/                  (módulo de aplicación)
+├── catalog-infrastructure/               (módulo de infraestructura — padre)
+│   ├── catalog-infrastructure-api-rest/
+│   ├── catalog-infrastructure-api-grpc/
+│   └── catalog-infrastructure-persistence-jpa/
+├── catalog-bootstrap/                    (módulo de arranque)
+└── catalog-doc/                          (módulo de documentación)
+----
+
+=== Grafo de dependencias
+
+[source,text]
+----
+                ┌────────────────┐
+                │ catalog-domain │  (sin dependencias externas)
+                └───────┬────────┘
+                        │ ←depende
+          ┌─────────────┴─────────────┐
+          │                           │
+ ┌────────┴─────────┐        ┌────────┴──────────────────┐
+ │catalog-application│        │  catalog-infrastructure   │
+ └────────┬─────────┘        │  (api-rest, api-grpc, jpa)│
+          │ ←depende          └────────┬──────────────────┘
+          └────────────┬──────────────┘
+                       │ ←depende
+              ┌────────┴────────┐
+              │catalog-bootstrap│
+              └─────────────────┘
+----
+
+IMPORTANT: La dirección de las dependencias garantiza que el dominio nunca conoce
+los detalles de la infraestructura. Si el dominio necesita algo del exterior
+(como acceder a la base de datos), lo define como una interfaz (puerto) y la
+infraestructura la implementa (adaptador), invirtiendo la dependencia.
+
+''''
+
+== Capa de Dominio
+
+=== Propósito
+
+La capa de dominio es el núcleo del hexágono. Contiene *exclusivamente* lógica
+de negocio: entidades, reglas de validación, contratos de repositorio (puertos
+de salida) y contratos de casos de uso (puertos de entrada).
+
+NOTE: El módulo `catalog-domain` no tiene ninguna dependencia de framework.
+No importa Spring, JPA, Jackson ni ninguna otra librería de infraestructura.
+Esto garantiza que las reglas de negocio son estables, portables y fácilmente
+testeables en aislamiento.
+
+=== Entidades de dominio
+
+Todas las entidades están implementadas como *Java records*, lo que garantiza:
+
+* *Inmutabilidad* — Los registros son inherentemente inmutables, evitando estados inconsistentes.
+* *Validación en construcción* — El constructor compacto valida invariantes de dominio.
+* *Código conciso* — Reducción de boilerplate sin perder expresividad.
+
+==== Jerarquía de entidades geográficas
+
+[source,text]
+----
+Pais                         ← Entidad independiente
+ComunidadAutonoma            ← Entidad independiente
+  └── Provincia              ← Hace referencia a ComunidadAutonoma
+        └── Localidad        ← Hace referencia a Provincia
+TipoVia                      ← Entidad independiente (catálogo)
+----
+
+==== Entidad `Pais`
+
+[source,java]
+----
+public record Pais(String id, String denominacion) {
+    public Pais {
+        Objects.requireNonNull(id, "El id del país no puede ser nulo");
+        Objects.requireNonNull(denominacion, "La denominación no puede ser nula");
+        if (id.isBlank())
+            throw new ValidationException(PaisErrorType.ID_REQUERIDO);
+        if (denominacion.isBlank())
+            throw new ValidationException(PaisErrorType.DENOMINACION_REQUERIDA);
+    }
+}
+----
+
+==== Modelo de paginación
+
+[source,java]
+----
+// Parámetros de entrada de paginación
+public record Paginacion(int page, int size) { }
+
+// Resultado paginado genérico
+public record Pagina<T>(
+    List<T> contenido,
+    long totalElementos,
+    int totalPaginas,
+    int numeroPagina,
+    int tamanio
+) {
+    public boolean esUltimaPagina() { return numeroPagina >= totalPaginas - 1; }
+    public boolean esPrimeraPagina() { return numeroPagina == 0; }
+}
+----
+
+=== Puertos del dominio
+
+==== Puertos de entrada (casos de uso)
+
+[source,java]
+----
+// Puerto de entrada — define el contrato de un caso de uso
+public interface GetPaisByIdUseCase {
+    Pais getPorId(String id);
+}
+
+public interface GetPaginatedPaisesUseCase {
+    Pagina<Pais> getPaginados(Paginacion paginacion);
+}
+----
+
+[cols="2,2", options="header"]
+|===
+| Entidad | Puertos de entrada
+
+| `Pais`
+| `GetPaisByIdUseCase`, `GetPaginatedPaisesUseCase`
+
+| `ComunidadAutonoma`
+| `GetComunidadAutonomaByIdUseCase`, `GetPaginatedComunidadesAutonomasUseCase`
+
+| `Provincia`
+| `GetProvinciaByIdUseCase`, `GetPaginatedProvinciasUseCase`
+
+| `Localidad`
+| `GetLocalidadByIdUseCase`, `GetPaginatedLocalidadesUseCase`
+
+| `TipoVia`
+| `GetTipoViaByIdUseCase`, `GetPaginatedTiposViaUseCase`
+|===
+
+==== Puertos de salida (repositorios)
+
+[source,java]
+----
+// Puerto de salida — define qué necesita el dominio para funcionar
+public interface PaisRepositoryPort {
+    Optional<Pais> getPorId(String id);
+    Pagina<Pais> getPaginados(Paginacion paginacion);
+}
+----
+
+=== Excepciones de dominio
+
+[source,text]
+----
+DomainException (base)
+├── NotFoundException      ← HTTP 404 en el adaptador REST
+└── ValidationException    ← HTTP 422 en el adaptador REST
+----
+
+Cada tipo de error se define como una implementación de la interfaz `ErrorType`,
+lo que permite que los adaptadores REST conviertan las excepciones de dominio
+en respuestas `RFC 9457 Problem Detail` sin que el dominio sepa nada de HTTP.
+
+''''
+
+== Capa de Aplicación
+
+=== Propósito
+
+La capa de aplicación orquesta los casos de uso: recibe una petición,
+invoca los puertos de salida necesarios del dominio y devuelve un resultado.
+No contiene lógica de negocio; sólo coordina.
+
+[source,java]
+----
+@Service
+@Transactional(readOnly = true)
+public class GetPaisByIdUseCaseImpl implements GetPaisByIdUseCase {
+
+    private final PaisRepositoryPort repository;
+
+    @Override
+    public Pais getPorId(String id) {
+        return repository.getPorId(id)
+            .orElseThrow(() -> new NotFoundException(PaisErrorType.NO_ENCONTRADO, id));
+    }
+}
+----
+
+=== Patrón Mediator
+
+Para escenarios más complejos, el proyecto implementa el patrón *Mediator*
+(también llamado *Dispatcher* o *Bus*), que desacopla quien emite una petición
+de quien la procesa.
+
+[source,java]
+----
+// Marcador para cualquier petición que puede ser enviada por el mediator
+public interface Request<R> { }
+
+// Handler que procesa un tipo específico de Request
+public interface RequestHandler<Req extends Request<Res>, Res> {
+    Res handle(Req request);
+}
+
+// Interfaz principal del Mediator
+public interface Mediator {
+    <R> R send(Request<R> request);
+}
+----
+
+`SpringMediator` usa el `ApplicationContext` de Spring para resolver
+dinámicamente el handler correcto a partir del tipo de la petición.
+
+=== Pipeline Behaviors
+
+Los *Pipeline Behaviors* son middlewares que envuelven la ejecución de cualquier
+handler, aplicando lógica transversal de forma declarativa y reutilizable:
+
+[source,text]
+----
+Request
+   │
+   ▼
+ValidationBehavior.handle()     ← valida la petición con Bean Validation
+   │
+   ▼
+LoggingBehavior.handle()        ← registra la petición y el tiempo de respuesta
+   │
+   ▼
+DomainEventsBehavior.handle()   ← recoge y publica eventos de dominio
+   │
+   ▼
+RequestHandler.handle()         ← lógica del caso de uso
+   │
+   ▼ (resultado)
+----
+
+=== Patrón CQRS en Localidades
+
+[source,java]
+----
+// Query (objeto de petición)
+public record GetLocalidadByIdQuery(String id) implements Request<Localidad> { }
+
+// Handler (procesador de la query)
+@Component
+public class GetLocalidadByIdHandler
+    implements RequestHandler<GetLocalidadByIdQuery, Localidad> {
+
+    @Override
+    public Localidad handle(GetLocalidadByIdQuery query) {
+        return repository.getPorId(query.id())
+            .orElseThrow(() -> new NotFoundException(...));
+    }
+}
+
+// En el adaptador REST se usa el Mediator (no el UseCase directamente):
+mediator.send(new GetLocalidadByIdQuery(id));
+----
+
+''''
+
+== Optimizaciones de Rendimiento
+
+=== Visión general
+
+[cols="1,2,2", options="header"]
+|===
+| Capa | Optimización | Impacto esperado
+
+| *Serialización*
+| Jackson Blackbird (bytecode)
+| 20-40% menos tiempo de serialización/deserialización
+
+| *Caché L1*
+| Caffeine (heap local)
+| Respuesta en microsegundos para datos calientes
+
+| *Caché L2*
+| Redis (distribuida)
+| Eliminación de queries a BD en entornos multi-instancia
+
+| *Conexiones BD*
+| HikariCP con parámetros optimizados
+| Reutilización de conexiones, mínima latencia de adquisición
+
+| *Concurrencia*
+| Virtual Threads (Java 25)
+| Throughput máximo con consumo mínimo de hilos del SO
+
+| *I/O HTTP*
+| HTTP/2 + compresión Gzip
+| Reducción de tamaño de respuesta y cabeceras
+
+| *Logging*
+| Log4j2 + LMAX Disruptor async
+| El logging no bloquea el hilo de petición
+|===
+
+=== Caché de dos niveles: Caffeine + Redis
+
+La caché sigue una estrategia *read-through* en dos niveles:
+
+[source,text]
+----
+Petición
+   │
+   ▼
+┌──────────────────────────────────────────┐
+│         Caffeine Cache (L1)              │
+│   Heap JVM · hasta 10.000 entradas       │
+│   TTL: 5 minutos · Eviction: LFU         │
+│   Acceso: < 1 microsegundo               │
+└──────────────────────────────────────────┘
+   │ (miss L1)
+   ▼
+┌──────────────────────────────────────────┐
+│         Redis Cache (L2)                 │
+│   Distribuida · compartida entre pods    │
+│   TTL: 10 minutos · Serialización: JSON  │
+│   Acceso: < 1 milisegundo (red local)    │
+└──────────────────────────────────────────┘
+   │ (miss L2)
+   ▼
+┌──────────────────────────────────────────┐
+│         PostgreSQL                       │
+│   Fuente de verdad · Query con índice    │
+└──────────────────────────────────────────┘
+----
+
+[source,java]
+----
+@Configuration
+@EnableCaching
+public class CacheConfiguration {
+
+    @Bean("caffeineCacheManager")
+    public CacheManager caffeineCacheManager(CaffeineSpec spec) {
+        return new CaffeineCacheManager() {{ setCaffeineSpec(spec); }};
+    }
+
+    @Bean("redisCacheManager")
+    public RedisCacheManager redisCacheManager(
+            RedisConnectionFactory factory, ObjectMapper objectMapper) {
+        var config = RedisCacheConfiguration.defaultCacheConfig()
+            .entryTtl(Duration.ofMinutes(10))
+            .serializeValuesWith(
+                RedisSerializationContext.SerializationPair.fromSerializer(
+                    new GenericJackson2JsonRedisSerializer(objectMapper)));
+        return RedisCacheManager.builder(factory).cacheDefaults(config).build();
+    }
+
+    @Primary
+    @Bean
+    public CacheManager compositeCacheManager(
+            @Qualifier("caffeineCacheManager") CacheManager l1,
+            @Qualifier("redisCacheManager")   CacheManager l2) {
+        var composite = new CompositeCacheManager(l1, l2);
+        composite.setFallbackToNoOpCache(true); // No falla si Redis no está
+        return composite;
+    }
+}
+----
+
+=== Virtual Threads (Project Loom)
+
+Los *Virtual Threads* (Java 21+ GA, mejorados en Java 25) son hilos ligeros
+gestionados por la JVM, no por el sistema operativo.
+
+[cols="3,2,2", options="header"]
+|===
+| Característica | Hilos tradicionales (OS) | Virtual Threads (JVM)
+
+| *Memoria por hilo*
+| ~1 MB (stack fijo)
+| ~1 KB (stack dinámico)
+
+| *Creación*
+| Costosa (syscall)
+| Muy barata (nanosegundos)
+
+| *Bloqueo I/O*
+| Bloquea el hilo del SO
+| Desmonta el virtual thread; el carrier thread sigue libre
+
+| *Throughput*
+| Limitado por número de cores × 2
+| Miles de peticiones concurrentes con pocos cores
+|===
+
+[source,yaml]
+----
+spring:
+  threads:
+    virtual:
+      enabled: true    # Habilita virtual threads para Tomcat y tareas async
+----
+
+=== Parámetros JVM para contenedor
+
+[source,dockerfile]
+----
+ENV JAVA_OPTS="\
+  -XX:+UseContainerSupport \
+  -XX:InitialRAMPercentage=50.0 \
+  -XX:MaxRAMPercentage=75.0 \
+  -XX:+UseZGC \
+  -XX:+ZGenerational \
+  -XX:+UseStringDeduplication \
+  -XX:MaxMetaspaceSize=256m \
+  -XX:+ExitOnOutOfMemoryError"
+----
+
+[cols="2,3", options="header"]
+|===
+| Parámetro | Propósito
+
+| `-XX:+UseContainerSupport`
+| La JVM respeta los límites de cgroup del contenedor en lugar de detectar la RAM del host.
+
+| `-XX:MaxRAMPercentage=75.0`
+| El heap máximo es el 75% de la RAM disponible. El 25% restante es para metaspace, stack de hilos y buffers nativos.
+
+| `-XX:+UseZGC -XX:+ZGenerational`
+| ZGC generacional: GC de ultra-baja latencia con pausas < 1 ms, mejora el throughput hasta un 30% frente a ZGC clásico.
+
+| `-XX:+ExitOnOutOfMemoryError`
+| Ante un OOM, la JVM termina inmediatamente. Kubernetes reiniciará el pod en lugar de dejarlo en estado corrupto.
+|===
+
+''''
+
+== Contenedores y Despliegue
+
+=== Dockerfile Multi-Stage
+
+[source,dockerfile]
+----
+# =============================================
+# ETAPA 1: BUILDER
+# =============================================
+FROM eclipse-temurin:25-jdk-alpine AS builder
+
+WORKDIR /app
+COPY target/*.jar app.jar
+RUN java -Djarmode=layertools -jar app.jar extract
+
+# =============================================
+# ETAPA 2: RUNTIME
+# =============================================
+FROM eclipse-temurin:25-jre-alpine
+
+# Usuario no root — seguridad en contenedor
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+WORKDIR /app
+
+# Capas ordenadas de menor a mayor frecuencia de cambio
+COPY --from=builder /app/dependencies/ ./
+COPY --from=builder /app/spring-boot-loader/ ./
+COPY --from=builder /app/snapshot-dependencies/ ./
+COPY --from=builder /app/application/ ./
+
+EXPOSE 8080
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS org.springframework.boot.loader.launch.JarLauncher"]
+----
+
+NOTE: En un ciclo de desarrollo típico sólo cambia la capa `application/`.
+Docker reutiliza las tres capas inferiores del caché, reduciendo el tiempo
+de build y el ancho de banda de push al registry de ~200 MB a ~5-10 MB.
+
+=== Docker Compose
+
+El fichero `docker-compose.yml` levanta el stack completo para desarrollo local
+con *health checks* en todos los servicios y `depends_on` condicional para
+garantizar el orden de arranque.
+
+[source,yaml]
+----
+services:
+  backend:
+    image: catalog-service:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      database:
+        condition: service_healthy
+      cache:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          memory: 512m
+          cpus: "1.0"
+
+  database:
+    image: postgres:16-alpine
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U catalog -d catalog"]
+
+  cache:
+    image: redis:8.0-alpine
+    command: redis-server --maxmemory 128mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+----
+
+''''
+
+== Estrategia de Testing
+
+=== Pirámide de tests
+
+[source,text]
+----
+          ┌─────────────────────┐
+          │   E2E / Contract    │  ← Pocos, lentos, frágiles
+          │  (gRPC / OpenAPI)   │
+          ├─────────────────────┤
+          │  Integración / BDD  │  ← Cucumber con Spring context
+          │  (Persistence + UC) │
+          ├─────────────────────┤
+          │    Unitarios        │  ← Muchos, rápidos, sin Spring
+          │  (Domain + App)     │
+          └─────────────────────┘
+----
+
+=== Tests de dominio (JUnit 5 puro)
+
+[source,java]
+----
+class PaisTest {
+
+    @Test
+    void deberiaCrearPaisValido() {
+        var pais = new Pais("ESP", "España");
+        assertThat(pais.id()).isEqualTo("ESP");
+        assertThat(pais.denominacion()).isEqualTo("España");
+    }
+
+    @Test
+    void deberiaFallarSiIdEsNulo() {
+        assertThatThrownBy(() -> new Pais(null, "España"))
+            .isInstanceOf(ValidationException.class);
+    }
+}
+----
+
+=== Tests BDD con Cucumber
+
+[source,gherkin]
+----
+Feature: Obtener país por identificador
+
+  Background:
+    Given un repositorio de países con los siguientes datos:
+      | id  | denominacion |
+      | ESP | España       |
+      | FRA | Francia      |
+
+  Scenario: Obtener un país existente
+    When se solicita el país con id "ESP"
+    Then se obtiene el país con denominación "España"
+
+  Scenario: País no encontrado lanza excepción
+    When se solicita el país con id "XXX"
+    Then se lanza una NotFoundException con el id "XXX"
+----
+
+=== Tests de persistencia con Testcontainers
+
+[source,java]
+----
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Testcontainers
+class PaisRepositoryAdapterTest {
+
+    @Container
+    static PostgreSQLContainer<?> postgres =
+        new PostgreSQLContainer<>("postgres:16-alpine")
+            .withDatabaseName("catalog_test");
+
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+    }
+
+    @Test
+    void deberiaObtenerPaisPorId() {
+        var resultado = adapter.getPorId("ESP");
+        assertThat(resultado).isPresent();
+        assertThat(resultado.get().denominacion()).isEqualTo("España");
+    }
+}
+----
+
+=== Cobertura objetivo
+
+[cols="1,1,3", options="header"]
+|===
+| Módulo | Tipo de tests | Cobertura objetivo
+
+| `catalog-domain`
+| JUnit 5 unitarios
+| ≥ 90% — todas las validaciones de entidades
+
+| `catalog-application`
+| JUnit 5 + Cucumber BDD
+| ≥ 85% — todos los casos de uso con escenarios happy/error
+
+| `catalog-infrastructure-persistence-jpa`
+| Spock + jqwik + Testcontainers
+| ≥ 80% — adaptadores con BD real
+
+| `catalog-infrastructure-api-rest`
+| `@WebMvcTest` con MockMvc
+| ≥ 75% — todos los endpoints y manejo de errores
+|===
+
+''''
+
+== Buenas Prácticas
+
+=== Principios SOLID
+
+==== S — Single Responsibility Principle
+
+[cols="2,3", options="header"]
+|===
+| Clase | Responsabilidad única
+
+| `PaisesApiDelegateImpl`
+| Mapear HTTP request/response a/desde el dominio
+
+| `GetPaisByIdUseCaseImpl`
+| Orquestar la lógica de obtención de un país
+
+| `PaisRepositoryAdapter`
+| Traducir entre el modelo JPA y el modelo de dominio
+
+| `GlobalExceptionHandler`
+| Traducir excepciones de dominio a respuestas HTTP
+|===
+
+==== O — Open/Closed Principle
+
+[source,java]
+----
+// Para añadir tracing a TODOS los handlers:
+// → Crear un nuevo PipelineBehavior (extensión)
+// → No modificar ningún handler existente (cerrado)
+
+@Component
+@Order(1)
+public class TracingBehavior<Req, Res> implements PipelineBehavior<Req, Res> {
+    @Override
+    public Res handle(Req request, Supplier<Res> next) {
+        return Tracer.trace(request.getClass().getSimpleName(), next);
+    }
+}
+----
+
+==== I — Interface Segregation Principle
+
+[source,java]
+----
+// ✅ Correcto — Interfaces pequeñas y específicas
+interface GetPaisByIdUseCase      { Pais getPorId(String id); }
+interface GetPaginatedPaisesUseCase { Pagina<Pais> getPaginados(Paginacion p); }
+
+// ❌ Incorrecto — Una interfaz "dios" que obliga a implementar todo
+interface PaisUseCase {
+    Pais getPorId(String id);
+    Pagina<Pais> getPaginados(Paginacion p);
+    void eliminar(String id);   // ← fuerza dependencia innecesaria
+}
+----
+
+==== D — Dependency Inversion Principle
+
+[source,java]
+----
+// catalog-application depende de la INTERFAZ (dominio)
+private final PaisRepositoryPort repository;  // interfaz en catalog-domain
+
+// catalog-infrastructure-persistence-jpa IMPLEMENTA la interfaz
+@Repository
+public class PaisRepositoryAdapter implements PaisRepositoryPort { ... }
+
+// Spring Boot inyecta la implementación concreta en tiempo de ejecución
+// → El código de aplicación nunca referencia JPA ni Hibernate directamente
+----
+
+=== Observabilidad con Actuator + Micrometer
+
+[cols="1,3", options="header"]
+|===
+| Endpoint | Propósito
+
+| `/actuator/health`
+| Estado global: BD, Redis, disco. Usado por load balancer.
+
+| `/actuator/health/liveness`
+| Liveness probe de Kubernetes (¿está vivo el proceso?).
+
+| `/actuator/health/readiness`
+| Readiness probe de Kubernetes (¿está listo para recibir tráfico?).
+
+| `/actuator/prometheus`
+| Métricas en formato Prometheus para scraping.
+
+| `/actuator/caches`
+| Estado de los cachés Caffeine y Redis.
+
+| `/actuator/loggers`
+| Cambio dinámico de nivel de logging sin reiniciar.
+|===
+
+=== Resumen de buenas prácticas
+
+[cols="1,2,3", options="header"]
+|===
+| Categoría | Práctica | Aplicación
+
+| *Arquitectura*
+| Hexagonal (Ports & Adapters)
+| Separación estricta en capas, dependencias hacia el interior
+
+| *Arquitectura*
+| Design-First API
+| OpenAPI y Protobuf como contrato canónico
+
+| *Código*
+| SOLID
+| Interfaces mínimas, inversión de dependencias, clases con una responsabilidad
+
+| *Código*
+| Inmutabilidad
+| Java records para entidades de dominio y DTOs internos
+
+| *Código*
+| Fail Fast
+| Validación en constructores de entidades, no en servicios
+
+| *DDD*
+| Lenguaje Ubicuo
+| Nombres en español que reflejan el negocio
+
+| *Rendimiento*
+| Caché multinivel
+| Caffeine (L1) + Redis (L2) con fallback graceful
+
+| *Rendimiento*
+| Virtual Threads
+| Máximo throughput en operaciones I/O bound
+
+| *Seguridad*
+| Usuario no root en contenedor
+| Limitación de impacto ante vulnerabilidades RCE
+
+| *Seguridad*
+| OWASP Dependency-Check
+| Detección automática de CVEs en dependencias
+
+| *Calidad*
+| ArchUnit
+| Validación automática de reglas de arquitectura en CI
+
+| *Calidad*
+| Spotless + SpotBugs
+| Formateo automático y análisis estático en cada build
+
+| *Observabilidad*
+| Actuator + Micrometer + Prometheus
+| Visibilidad completa del estado del servicio en producción
+|===
+
+''''
+
+== Inicio Rápido
+
+=== Requisitos
+
+* Java 25+ (recomendado: Eclipse Temurin)
+* Maven 3.8.0+
+* Docker y Docker Compose
+
+=== Clonar y compilar
+
+[source,bash]
+----
+git clone https://github.com/iCesofT/arquitectura-hexagonal.git
+cd arquitectura-hexagonal/catalog-service
+./mvnw clean compile
+----
+
+=== Ejecutar con Docker Compose
+
+[source,bash]
+----
+docker-compose up -d
+----
+
+=== Verificar funcionamiento
+
+[source,bash]
+----
+# Health Check
+curl http://localhost:8080/actuator/health
+
+# API REST — Países
+curl http://localhost:8080/api/v1/paises
+
+# Swagger UI
+open http://localhost:8080/openapi/ui.html
+----
+
+=== API Endpoints
+
+==== REST (Puerto 8080)
+
+* `GET /api/v1/paises` — Lista paginada de países
+* `GET /api/v1/paises/{id}` — Obtener país por ID
+* `GET /api/v1/comunidades-autonomas` — Lista de comunidades autónomas
+* `GET /api/v1/provincias` — Lista de provincias
+* `GET /api/v1/localidades` — Lista de localidades
+* `GET /actuator/health` — Health check
+* `GET /openapi/ui.html` — Documentación interactiva
+
+==== gRPC (Puerto 9090)
+
+* `CatalogService.GetPaises()` — Lista países
+* `CatalogService.GetPaisById()` — País por ID
+* `CatalogService.GetComunidadesAutonomas()` — Comunidades autónomas
+
+=== Ejecución de tests
+
+[source,bash]
+----
+# Tests unitarios
+./mvnw test
+
+# Tests de integración (requiere Docker)
+./mvnw verify
+
+# Tests Cucumber (BDD)
+./mvnw test -Dtest="*CucumberTest"
+----
+
+''''
+
+== Autor y enlaces
+
+* *Repositorio*: https://github.com/iCesofT/arquitectura-hexagonal[github.com/iCesofT/arquitectura-hexagonal]
+* *Blog*: https://www.icesoft.blog/2026/04/07/arquitectura-hexagonal-catalogo/[www.icesoft.blog]
+* *Autor*: https://github.com/iCesofT[Francisco Javier Ahijado (@iCesofT)]
+
+=== Referencias
+
+* https://alistair.cockburn.us/hexagonal-architecture/[Hexagonal Architecture — Alistair Cockburn]
+* https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/[Spring Boot 4.0 Documentation]
+* https://grpc.io/docs/languages/java/[gRPC Java Documentation]
+* https://docs.oracle.com/en/java/javase/25/[Java 25 Documentation]
+
+''''
+
+_¿Preguntas o problemas? Abre un https://github.com/iCesofT/arquitectura-hexagonal/issues[issue en GitHub]._
