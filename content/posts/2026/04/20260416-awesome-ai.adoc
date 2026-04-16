@@ -1,0 +1,286 @@
+---
+title: "Agentes y Skills para el Ciclo de Vida del Desarrollo de Software"
+date: 2026-04-16
+draft: false
+description: "Colección curada de agentes de IA y skills estructuradas para acompañar todo el ciclo de vida del desarrollo de software con calidad de producción."
+tags: ["ia", "agentes", "skills", "ddd", "java", "spring-boot", "devops", "arquitectura"]
+categories: ["Herramientas de IA", "Ingeniería de Software"]
+---
+= awesome-ai
+Francisco Javier Ahijado
+:doctype: article
+:icons: font
+:source-highlighter: highlight.js
+:toc: left
+:toc-title: Contenido
+:toclevels: 3
+:sectanchors:
+:sectlinks:
+:imagesdir: images
+:github-url: https://github.com/iCesofT/awesome-ai
+
+[.lead]
+Colección curada de *agentes de IA* y *skills estructuradas* para acompañar todo el ciclo de vida del desarrollo de software con calidad de producción.
+
+image::https://img.shields.io/github/license/iCesofT/awesome-ai[Licencia, link={github-url}]
+image::https://img.shields.io/github/stars/iCesofT/awesome-ai[Estrellas, link={github-url}]
+
+[IMPORTANT]
+====
+El código fuente está disponible en {github-url}[github.com/iCesofT/awesome-ai].
+====
+
+== ¿Qué es awesome-ai?
+
+*awesome-ai* es un repositorio de referencia diseñado para potenciar el trabajo de desarrolladoras y desarrolladores que utilizan herramientas de desarrollo asistidas por IA como https://claude.ai/code[Claude Code], Cursor o GitHub Copilot.
+
+A diferencia de las colecciones genéricas de prompts, este repositorio ofrece:
+
+* **Agentes especializados** — roles de IA con responsabilidades concretas, flujos de trabajo definidos y políticas de ejecución autónoma.
+* **Skills del ciclo de vida** — guías estructuradas y accionables organizadas por fase de desarrollo: planificación, diseño, implementación, pruebas y despliegue.
+* **Contenido legible por máquinas** — todo el material sigue formatos estructurados y sin ambigüedades que los asistentes de IA pueden seguir con precisión.
+* **Código real, sin plantillas** — los agentes producen implementaciones completas listas para producción.
+
+=== Filosofía de diseño
+
+[cols="1,3", options="header"]
+|===
+| Principio | Descripción
+
+| AI-ready
+| Formatos estructurados y parseables por máquinas, sin ambigüedad.
+
+| Agnóstico al lenguaje
+| Funciona con Go, Rust, Python, TypeScript, Java, C# y .NET.
+
+| DDD en el núcleo
+| Los patrones de Domain-Driven Design están integrados en todo el repositorio.
+
+| Solo código funcional
+| Los agentes producen implementaciones completas, nunca plantillas vacías.
+
+| Seguridad desde el diseño
+| Seguridad y cumplimiento GDPR como preocupaciones de primer orden.
+
+| Sistemas observables
+| Logging estructurado, trazado distribuido y alertas integrados.
+
+| Excelencia pragmática
+| Equilibrio entre calidad artesanal y velocidad de entrega.
+|===
+
+== Estructura del repositorio
+
+[source,text]
+----
+awesome-ai/
+├── README.md
+├── agents/                    # 13 agentes especializados
+│   ├── *.agent.md
+│   └── skills/                # 19 skills de referencia para agentes
+│       ├── api-design-principles/
+│       ├── architecture-patterns/
+│       ├── clean-ddd-hexagonal/
+│       └── ...
+└── skills/                    # 58 skills organizadas por fase
+    ├── 01-planning-*/         # Planificación y especificación (9)
+    ├── 02-design-*/           # Diseño y arquitectura (8)
+    ├── 03-development-*/      # Desarrollo e implementación (14)
+    ├── 04-testing-*/          # Pruebas y validación (6)
+    └── 05-deployment-*/       # Despliegue y operaciones (11)
+----
+
+[NOTE]
+====
+El repositorio contiene en total **13 agentes**, **19 skills de agente** y **58 skills de ciclo de vida** — más de 90 recursos listos para su uso con herramientas de IA.
+====
+
+== Los 13 agentes
+
+Cada agente representa un rol especializado con un flujo de trabajo definido, criterios de calidad y políticas de ejecución claras.
+
+=== ADR Generator
+
+Genera registros de decisiones arquitectónicas (_Architecture Decision Records_) en formato Markdown. Crea archivos numerados bajo `/docs/adr/` con una lista de verificación de 13 puntos para garantizar decisiones técnicas bien documentadas y justificadas.
+
+=== API Architect
+
+Diseña capas de conectividad API con arquitectura de tres niveles: servicio, gestor y resiliencia. Devuelve código completamente funcional con soporte para circuit breaker, bulkhead y patrones de throttling.
+
+=== Context Architect
+
+Mapea todos los archivos afectados por un cambio planificado. Produce mapas de contexto con ficheros primarios, secundarios, cobertura de pruebas y patrones relevantes, y propone secuencias de implementación para evitar problemas en cascada.
+
+=== Modernization Agent
+
+Modernización completa de proyectos con intervención humana en puntos clave (_human-in-the-loop_). Compatible con cualquier stack: .NET, Java, Python, Node.js, Go, PHP y Ruby. Realiza un análisis exhaustivo de 9 pasos que incluye la lectura de **cada fichero de lógica de negocio**.
+
+=== PostgreSQL DBA
+
+Gestión completa de bases de datos PostgreSQL: creación de esquemas, optimización de consultas, copias de seguridad, monitorización y seguridad. Requiere la extensión de VS Code `ms-ossdata.vscode-pgsql`.
+
+=== Principal Software Engineer
+
+Guía técnica de nivel experto modelada sobre las prácticas de Martin Fowler. Cubre análisis de requisitos, patrones GoF, principios SOLID/DRY/YAGNI/KISS, código limpio, automatización de pruebas y gestión de deuda técnica. Crea GitHub Issues para la remediación de la deuda técnica identificada.
+
+=== Prompt Builder
+
+Ingeniería y validación de prompts de alta calidad. Opera con dos personas: _Prompt Builder_ (crea y mejora) y _Prompt Tester_ (valida). Ejecuta hasta tres ciclos de investigación, prueba y mejora. Aplica lenguaje imperativo, especificidad y flujo lógico.
+
+=== Prompt Engineer
+
+Analiza y reestructura prompts existentes evaluando simplicidad, cadena de pensamiento, estructura, ejemplos y complejidad. Devuelve un análisis razonado detallado y el prompt mejorado de forma literal.
+
+=== QA Subagent
+
+Opera bajo la filosofía: _"asumir que está roto hasta que se demuestre lo contrario"_. Produce planes de prueba que cubren: happy path, valores límite, casos negativos, manejo de errores, concurrencia y seguridad. Incluye un formato de informe de bugs con niveles de severidad.
+
+=== Software Engineer Agent v1
+
+Generación de código listo para producción con ejecución autónoma y sin confirmaciones. Sigue el proceso: Analizar → Diseñar → Implementar → Validar → Reflexionar → Entregar. Aplica la pirámide de pruebas: muchos tests unitarios → integración focalizada → pocos E2E. Política crítica: ejecución sin confirmación previa.
+
+=== Specification Agent
+
+Genera documentos de especificación listos para IA con secciones estructuradas: propósito/alcance, definiciones, requisitos, interfaces, criterios de aceptación, estrategia de pruebas, justificación, dependencias, ejemplos y criterios de validación. Guarda los archivos bajo `/spec/`.
+
+=== Tech Debt Remediation Plan
+
+Análisis exhaustivo de deuda técnica y plan de remediación. Puntúa cada elemento según facilidad de remediación (1–5), impacto (1–5) y riesgo (bajo/medio/alto). Genera tabla resumen y planes detallados por ítem.
+
+== Skills del ciclo de vida
+
+Las 58 skills están organizadas en cinco fases del ciclo de vida del software.
+
+=== Fase 01 — Planificación y especificación
+
+[cols="1,3", options="header"]
+|===
+| Skill | Descripción
+
+| Architecture Decision Records
+| Guía para crear y mantener ADRs.
+
+| Architecture Patterns & Reviews
+| Selección y revisión de patrones arquitectónicos.
+
+| Backend Patterns Selection
+| Criterios para elegir patrones de backend adecuados.
+
+| Specification Creation
+| Creación de especificaciones técnicas detalladas.
+
+| DDD Domain Expertise
+| Expertise en el dominio con DDD estratégico y táctico.
+
+| DDD Strategic Design
+| Contextos delimitados, subdominios y lenguaje ubicuo.
+
+| OpenAPI Spec Generation
+| Generación y validación de especificaciones OpenAPI 3.1.
+
+| Spec-Driven Development
+| Desarrollo guiado por especificaciones previas.
+
+| Architecture Patterns Reference
+| Referencia de patrones: Clean, Hexagonal, Microservicios.
+|===
+
+=== Fase 02 — Diseño y arquitectura
+
+Incluye skills para diseño de APIs REST y GraphQL, código limpio, Clean Architecture con DDD y arquitectura hexagonal, revisión de código, estándares de codificación, patrones GoF, diseño gRPC y principios SOLID.
+
+=== Fase 03 — Desarrollo e implementación
+
+Catorce skills que cubren: patrones de caché (local, distribuida, CDN), simplificación de código, revisión de concurrencia, commits convencionales, depuración, manejo de errores, flujo Git, mejores prácticas Java, patrones JPA/Hibernate, logging estructurado, auditoría de dependencias Maven, Spring Boot, y revisión/optimización de SQL.
+
+=== Fase 04 — Pruebas y validación
+
+Seis skills dedicadas a: patrones BDD (Given-When-Then), depuración en contexto de pruebas, testing E2E, pruebas unitarias e integración en Spring Boot, desarrollo guiado por pruebas (TDD), y evaluación de calidad de tests.
+
+=== Fase 05 — Despliegue y operaciones
+
+Once skills para: generación de changelogs, patrones de despliegue (blue/green, canary, rolling), auditoría de cumplimiento GDPR, migraciones con Liquibase, logging en producción, builds Docker multi-stage, observabilidad (métricas, trazado, alertas), optimización de rendimiento, detección de anti-patrones de rendimiento, auditoría de seguridad y hardening de seguridad en Spring Boot.
+
+== Stack tecnológico
+
+=== Lenguajes y frameworks principales
+
+* **Java** — Enterprise Java, Spring Boot 3.x, Spring WebFlux
+* **Spring Framework** — Boot, Security, JPA, WebFlux
+* **Bases de datos** — PostgreSQL (principal), MySQL, SQL Server, Oracle
+* **Contenerización** — Docker con builds multi-stage
+* **Migraciones** — Liquibase
+* **Control de versiones** — Git & GitHub
+
+=== Patrones arquitectónicos
+
+* Domain-Driven Design (DDD) — integración central
+* Clean Architecture
+* Arquitectura Hexagonal
+* Patrones de microservicios
+* Comunicación orientada a eventos
+* Principios SOLID
+* Patrones de diseño GoF
+
+=== Prácticas de desarrollo
+
+* Test-Driven Development (TDD)
+* Behavior-Driven Development (BDD)
+* Commits convencionales
+* Revisiones de código estructuradas
+* Optimización de rendimiento
+* Seguridad desde el diseño
+* Cumplimiento GDPR
+
+== Cómo empezar
+
+=== Integración con Claude Code
+
+. Clona el repositorio:
++
+[source,bash]
+----
+git clone https://github.com/iCesofT/awesome-ai.git
+----
+
+. Referencia los agentes y skills en tus prompts o configuración del workspace de Claude Code.
+
+. Consulta el `README.md` para ver todos los agentes disponibles y cómo invocarlos.
+
+=== Estructura de una skill
+
+Cada skill contiene al menos un fichero `SKILL.md` con:
+
+* **Frontmatter YAML** — nombre, descripción y metadatos.
+* **Cuándo usar** — orientación contextual.
+* **Conceptos clave** — teoría y mejores prácticas.
+* **Flujo de trabajo** — proceso paso a paso.
+* **Ejemplos y patrones** — código o plantillas de referencia.
+
+Algunas skills incluyen además un directorio `assets/` con checklists, plantillas y ejemplos de código, y un directorio `references/` con documentación de referencia adicional.
+
+== Contribuir
+
+Las contribuciones son bienvenidas. Para mantener la coherencia del repositorio:
+
+* **Nuevos agentes** → `agents/<nombre>.agent.md`
+* **Skills específicas de agente** → `agents/skills/<nombre>/`
+* **Skills de ciclo de vida** → `skills/<fase>-<nombre>/`
+
+Todos los ficheros deben seguir el frontmatter y la estructura de secciones existentes para garantizar el parseo correcto por parte de los asistentes de IA.
+
+[TIP]
+====
+El repositorio está diseñado para evolucionar. Si encuentras una skill o agente que podría mejorarse o un caso de uso no cubierto, considera abrir un _issue_ o una _pull request_ en {github-url}[GitHub].
+====
+
+== Recursos
+
+* {github-url}[Repositorio en GitHub] — código fuente, issues y pull requests.
+* {github-url}/tree/main/agents[Directorio de agentes] — los 13 agentes especializados.
+* {github-url}/tree/main/skills[Directorio de skills] — las 58 skills del ciclo de vida.
+* {github-url}/blob/main/README.md[README principal] — documentación completa en inglés.
+
+---
+
+_Generado el 2026-04-16. Repositorio mantenido por {github-url}[iCesofT]._
