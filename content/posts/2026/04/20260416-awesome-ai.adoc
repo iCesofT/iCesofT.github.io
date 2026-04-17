@@ -10,14 +10,16 @@ categories: ["Herramientas de IA", "Ingeniería de Software"]
 Francisco Javier Ahijado
 :doctype: article
 :icons: font
-:source-highlighter: highlight.js
+:source-highlighter: rouge
+:rouge-style: github
 :toc: left
 :toc-title: Contenido
 :toclevels: 3
 :sectanchors:
-:sectlinks:
+:sectnums:
 :imagesdir: images
 :github-url: https://github.com/iCesofT/awesome-ai
+:icons: font
 
 [.lead]
 Colección curada de *agentes de IA* y *skills estructuradas* para acompañar todo el ciclo de vida del desarrollo de software con calidad de producción.
