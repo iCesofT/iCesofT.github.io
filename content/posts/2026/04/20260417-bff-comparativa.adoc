@@ -11,9 +11,10 @@ description: "Suite de comparación de cinco implementaciones del patrón Backen
 :toc-title: Contenido
 :toclevels: 3
 :source-highlighter: rouge
+:rouge-style: github
 :icons: font
 :sectanchors:
-:sectlinks:
+:sectnums:
 
 == Introducción
 
