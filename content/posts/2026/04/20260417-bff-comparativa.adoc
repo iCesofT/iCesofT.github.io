@@ -1,0 +1,438 @@
+---
+title: "BFF Multi-Implementación: Comparativa de Paradigmas Backend for Frontend"
+date: 2026-04-17
+draft: false
+tags: ["java", "spring-boot", "quarkus", "nodejs", "camel", "arquitectura", "bff", "docker", "claude-code"]
+categories: ["arquitectura", "backend", "comparativas"]
+description: "Suite de comparación de cinco implementaciones del patrón Backend for Frontend usando Spring MVC, Spring WebFlux, Quarkus, Apache Camel y Node.js/Fastify. Generado íntegramente con Claude Code."
+---
+= BFF Multi-Implementación: Comparativa de Paradigmas Backend for Frontend
+:toc: left
+:toc-title: Contenido
+:toclevels: 3
+:source-highlighter: rouge
+:icons: font
+:sectanchors:
+:sectlinks:
+
+== Introducción
+
+Este proyecto es una *suite de comparación multi-implementación* del patrón **BFF (Backend For Frontend)**. Su objetivo es mostrar las características, ventajas y _trade-offs_ de cinco tecnologías y paradigmas de desarrollo backend distintos, exponiendo exactamente la misma funcionalidad a través de cada uno de ellos.
+
+Todo el desarrollo se ha realizado íntegramente utilizando https://claude.com/product/claude-code[Claude Code], como prueba de concepto para la generación de proyectos completos mediante prompts. Es también una demostración práctica de hasta dónde puede llegar un LLM en dominios técnicos donde el autor —reconocidamente— no tiene experiencia directa en todos los stacks (Quarkus, Apache Camel).
+
+El código fuente está disponible en GitHub: https://github.com/iCesofT/bff-samples[iCesofT/bff-samples]
+
+== Objetivo
+
+Comparar el comportamiento, rendimiento y consumo de recursos de cinco implementaciones equivalentes de un BFF que:
+
+1. Consulta la API pública https://restcountries.com[REST Countries] para obtener datos geográficos de un país.
+2. Consulta la API pública https://open-meteo.com[Open-Meteo] para obtener el tiempo meteorológico actual de la capital.
+3. Agrega ambas respuestas en un único endpoint REST unificado.
+
+Todas las implementaciones siguen **Arquitectura Hexagonal (Ports & Adapters)** y exponen el mismo contrato de API.
+
+== Las cinco implementaciones
+
+[cols="1,2,1,1,2,1", options="header"]
+|===
+| Módulo | Framework | Lenguaje | Servidor | Modelo de ejecución | Puerto
+
+| `bff-webmvc`
+| Spring Boot 4
+| Java 25
+| Tomcat
+| Bloqueante (thread-per-request)
+| 8081
+
+| `bff-webflux`
+| Spring Boot 4
+| Java 25
+| Netty
+| Reactivo (Mono/Flux)
+| 8082
+
+| `bff-quarkus`
+| Quarkus 3
+| Java 25
+| Vert.x
+| Reactivo + GraalVM nativo
+| 8083
+
+| `bff-camel`
+| Apache Camel 4 + Spring Boot 4
+| Java 25
+| Tomcat
+| Bloqueante con EIP routes
+| 8084
+
+| `bff-nodejs`
+| Fastify 5
+| JavaScript (Node 22)
+| Fastify
+| Event loop asíncrono
+| 3000
+|===
+
+== Arquitectura Hexagonal
+
+Todas las implementaciones siguen la misma estructura interna, garantizando que la lógica de negocio permanece aislada del framework y de las APIs externas.
+
+[source]
+----
+domain/
+├── model/              # CountryInfo, WeatherInfo, etc.
+├── port/               # Interfaces CountryPort, WeatherPort
+└── exception/          # Excepciones de dominio
+
+application/
+└── GetWeatherByCountryUseCase   # Lógica de negocio pura
+
+infrastructure/
+├── api/                # Controladores / rutas HTTP (adaptador primario)
+├── config/             # Configuración, clientes HTTP, caché
+├── restcountries/      # Adaptador REST Countries API (adaptador secundario)
+└── openmeteo/          # Adaptador Open-Meteo API (adaptador secundario)
+----
+
+El único caso de uso de negocio es `GetWeatherByCountryUseCase`, que orquesta la llamada a `CountryPort` y `WeatherPort` sin conocer ningún detalle de infraestructura.
+
+== API expuesta
+
+Todos los módulos exponen el mismo endpoint:
+
+[source,http]
+----
+GET /api/v1/weather?country={nombre_del_pais}
+----
+
+=== Ejemplo de respuesta
+
+[source,json]
+----
+{
+  "country": {
+    "commonName": "Spain",
+    "officialName": "Kingdom of Spain",
+    "cca2": "ES",
+    "cca3": "ESP",
+    "ccn3": "724",
+    "latitude": 40.0,
+    "longitude": -4.0
+  },
+  "capital": {
+    "name": "Madrid",
+    "latitude": 40.4165,
+    "longitude": -3.7026
+  },
+  "weather": {
+    "temperature": 22.5,
+    "temperatureUnit": "°C",
+    "windSpeed": 14.2,
+    "windSpeedUnit": "km/h"
+  }
+}
+----
+
+=== Errores (RFC 9457 Problem Detail)
+
+Los errores siguen el estándar RFC 9457 _Problem Detail_ en todas las implementaciones:
+
+[cols="1,3", options="header"]
+|===
+| Código | Situación
+
+| `400`
+| Parámetro `country` ausente o vacío
+
+| `404`
+| País no encontrado (la API de países devuelve 404)
+
+| `503`
+| API externa no disponible (circuit breaker abierto)
+
+| `500`
+| Error inesperado
+|===
+
+== Características técnicas comparadas
+
+=== Resiliencia
+
+[cols="1,3", options="header"]
+|===
+| Módulo | Librería y estrategia
+
+| `bff-webmvc`
+| Resilience4j — `@CircuitBreaker`, `@Retry` (3 intentos, excluye 404), `@TimeLimiter` (5 s)
+
+| `bff-webflux`
+| Resilience4j Reactor — operadores aplicados sobre `Mono`/`Flux`
+
+| `bff-quarkus`
+| SmallRye Fault Tolerance — `@CircuitBreaker`, `@Timeout`, `@Fallback` como anotaciones CDI
+
+| `bff-camel`
+| Camel Resilience4j Policy — circuit breaker declarado en la ruta EIP
+
+| `bff-nodejs`
+| Opossum 8 — circuit breaker + retry manual (3 intentos, excluye 404)
+|===
+
+NOTE: El circuit breaker *no contabiliza los 404 como fallos*: un país no encontrado es una respuesta válida del servicio externo, no un fallo de infraestructura.
+
+=== Caché en dos niveles
+
+Todos los módulos implementan caché en dos niveles:
+
+* **L1 (local)** — Caffeine / Quarkus Cache / node-cache: caché en memoria sin latencia de red. TTL países: 1 h; TTL tiempo: 15 min.
+* **L2 (distribuida)** — Redis 7: caché compartida entre instancias. Solo para datos de países (TTL 1 día), ya que el TTL del tiempo meteorológico es demasiado corto para justificar la latencia de red adicional.
+
+=== Métricas y observabilidad
+
+[cols="1,3", options="header"]
+|===
+| Stack | Mecanismo
+
+| Spring Boot (webmvc, webflux, camel)
+| Actuator + Micrometer → Prometheus; health con liveness/readiness separados para Kubernetes
+
+| Quarkus
+| Micrometer + SmallRye Health; misma distinción liveness/readiness
+
+| Node.js
+| Endpoint `GET /api/v1/health` → `{"status":"UP"}`
+|===
+
+== Estimación de recursos
+
+[cols="1,1,1", options="header"]
+|===
+| Módulo | RAM aproximada | Tiempo de arranque
+
+| `bff-webmvc`
+| ~300 MB
+| ~3 s
+
+| `bff-webflux`
+| ~200 MB
+| ~2 s
+
+| `bff-quarkus` (JVM)
+| ~80 MB
+| <1 s
+
+| `bff-quarkus` (nativo)
+| ~50 MB
+| <50 ms
+
+| `bff-camel`
+| ~350 MB
+| ~4 s
+
+| `bff-nodejs`
+| ~60 MB
+| <1 s
+|===
+
+Los datos anteriores son estimaciones en condiciones de carga moderada. Los valores definitivos se obtienen ejecutando las pruebas de rendimiento con k6 descritas más adelante.
+
+== Infraestructura
+
+=== API Gateway (Nginx)
+
+Nginx actúa como puerta de entrada unificada en el puerto **8080**, enrutando el tráfico por prefijo de ruta y reescribiendo la URL antes del proxy:
+
+[cols="1,2", options="header"]
+|===
+| Prefijo | Destino
+
+| `/webmvc/*`
+| Spring MVC — `bff-webmvc:8081`
+
+| `/webflux/*`
+| Spring WebFlux — `bff-webflux:8082`
+
+| `/quarkus/*`
+| Quarkus — `bff-quarkus:8083`
+
+| `/camel/*`
+| Apache Camel — `bff-camel:8084`
+
+| `/nodejs/*`
+| Node.js / Fastify — `bff-nodejs:3000`
+
+| `/health`
+| Estado del gateway (respuesta local 200 OK)
+|===
+
+Configuración adicional: keepalive 16 conexiones por upstream, gzip habilitado para `application/json`, logs con `upstream_response_time`.
+
+=== Docker Compose
+
+El `docker-compose.yml` de la raíz orquesta los cinco servicios más Redis y Nginx, con _healthchecks_ y `depends_on` para garantizar que Redis esté listo antes de que arranquen los BFF.
+
+[cols="1,1", options="header"]
+|===
+| Servicio | Límite de RAM
+
+| redis
+| 32 MB
+
+| nginx
+| 16 MB
+
+| bff-nodejs
+| 64 MB
+
+| bff-quarkus
+| 256 MB
+
+| bff-webmvc
+| 512 MB
+
+| bff-webflux
+| 512 MB
+
+| bff-camel
+| 512 MB
+|===
+
+Todos los Dockerfiles son multi-stage: etapa de compilación, extracción de capas JAR (solo Spring Boot) y runtime sobre imagen Alpine. Los contenedores Java usan `-XX:+UseContainerSupport -XX:+UseZGC -XX:MaxRAMPercentage=75.0` y arrancan como usuario no-root.
+
+== Cómo ejecutar
+
+=== Arrancar todo el stack
+
+[source,bash]
+----
+git clone https://github.com/iCesofT/bff-samples.git
+cd bff-samples
+docker compose up --build -d
+----
+
+=== Probar el endpoint
+
+[source,bash]
+----
+# A través del API Gateway (Nginx puerto 8080)
+curl "http://localhost:8080/nodejs/api/v1/weather?country=Spain"
+curl "http://localhost:8080/webmvc/api/v1/weather?country=Germany"
+curl "http://localhost:8080/webflux/api/v1/weather?country=Japan"
+curl "http://localhost:8080/quarkus/api/v1/weather?country=France"
+curl "http://localhost:8080/camel/api/v1/weather?country=Italy"
+----
+
+=== Ver logs de un módulo
+
+[source,bash]
+----
+docker compose logs -f bff-webmvc
+----
+
+=== Parar todo
+
+[source,bash]
+----
+docker compose down
+----
+
+== Pruebas de rendimiento con k6
+
+El directorio `k6/` contiene un test de carga que ejercita el endpoint en todos los módulos bajo diferentes niveles de concurrencia con 30 países europeos, americanos y asiáticos aleatorizados por VU.
+
+=== Escenario de carga
+
+[cols="1,1,1", options="header"]
+|===
+| Fase | Duración | VUs
+
+| Calentamiento
+| 0 – 30 s
+| 0 → 10
+
+| Carga normal
+| 30 s – 1 m 30 s
+| → 30
+
+| Pico
+| 1 m 30 s – 2 m
+| → 60
+
+| Descenso
+| 2 m – 3 m 30 s
+| → 0
+|===
+
+=== Umbrales de aceptación
+
+* **p95 latencia**: < 2 000 ms
+* **p99 latencia**: < 4 000 ms
+* **Tasa de error**: < 1 %
+
+=== Ejecución
+
+[source,bash]
+----
+# Probar un servicio concreto
+k6 run -e SERVICE=webmvc k6/bff-performance-test.js
+
+# Sustituir SERVICE por: webmvc | webflux | quarkus | camel | nodejs
+----
+
+== Compilación nativa con Quarkus
+
+El módulo `bff-quarkus` soporta compilación nativa con GraalVM/Mandrel, produciendo un binario que arranca en menos de 50 ms y consume ~50 MB de RAM:
+
+[source,bash]
+----
+cd bff-quarkus
+./mvnw package -Pnative
+----
+
+== Variables de entorno
+
+Todas las implementaciones leen las mismas variables de entorno, con valores por defecto razonables:
+
+[source,bash]
+----
+REST_COUNTRIES_URL=https://restcountries.com/v3.1
+OPEN_METEO_URL=https://api.open-meteo.com/v1
+REDIS_HOST=redis           # 'localhost' fuera de Docker
+REDIS_PORT=6379
+
+# Circuit Breaker
+CB_TIMEOUT_MS=5000
+CB_ERROR_THRESHOLD_PERCENT=50
+CB_RESET_TIMEOUT_MS=10000
+
+# Cache TTLs
+CACHE_COUNTRIES_TTL_SECONDS=3600
+CACHE_WEATHER_TTL_SECONDS=900
+----
+
+== Reflexiones sobre el desarrollo con Claude Code
+
+Este proyecto nació como una prueba de concepto: ¿puede un LLM generar un proyecto completo, multi-módulo y con decisiones técnicas coherentes en stacks que el autor no domina?
+
+La respuesta es que sí, con matices. Claude Code fue capaz de:
+
+* Diseñar y mantener la consistencia de la Arquitectura Hexagonal en los cinco módulos.
+* Tomar decisiones de diseño fundamentadas (por ejemplo, no cachear el tiempo en Redis porque el TTL corto no justifica la latencia de red).
+* Generar Dockerfiles multi-stage, configuración de Nginx, rutas Camel EIP y gestión reactiva con Resilience4j sin intervención manual.
+* Respetar restricciones explícitas: sin TypeScript en Node.js, sin comentarios innecesarios, RFC 9457 en todos los errores.
+
+Los puntos donde la supervisión humana sigue siendo imprescindible son la validación funcional real del comportamiento bajo carga y la detección de sutilezas en stacks menos convencionales (Camel EIP, compilación nativa de Quarkus).
+
+== Requisitos
+
+* **Docker** y **Docker Compose** — para levantar todo el stack de una vez.
+* **Java 25** — para compilar los módulos JVM individualmente (fuera de Docker).
+* **Node.js 22 LTS** — para el módulo Node.js individualmente.
+* **GraalVM / Mandrel** — solo para la compilación nativa de Quarkus.
+* **k6** — para las pruebas de rendimiento.
+
+== Código fuente
+
+El repositorio completo está disponible en https://github.com/iCesofT/bff-samples[github.com/iCesofT/bff-samples].
