@@ -90,4 +90,4 @@ home = ["HTML", "RSS", "JSON"]
 pagerSize = 10
 
 [ga_analytics]
-google_tag_manager_id = GTM-TTKVLB6J
+  google_tag_manager_id = GTM-TTKVLB6J
