@@ -56,7 +56,8 @@ home = ["HTML", "RSS", "JSON"]
   twitter = '@fjahijado'
   largeTwitterCard = false
 
-  ga_analytics = "G-7YNGWBJVNV"
+  ga_analytics = "GTM-TTKVLB6J"
+  google_tag_manager_id = "GTM-TTKVLB6J"
 
   numberOfTagsShown = 10
 
@@ -88,6 +89,3 @@ home = ["HTML", "RSS", "JSON"]
 
 [pagination]
 pagerSize = 10
-
-[ga_analytics]
-  google_tag_manager_id = "GTM-TTKVLB6J"
