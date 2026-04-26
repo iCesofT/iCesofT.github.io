@@ -1,0 +1,171 @@
+---
+author: iCesofT
+title: "Choose Right Technology (actualización)"
+description: "Reflexión actualizada sobre cómo elegir tecnología de forma pragmática en proyectos reales"
+date: 2026-04-26T19:00:00+02:00
+draft: false
+tags:
+  - Software architecture
+  - Decision making
+  - Engineering
+categories:
+  - Programming
+slug: "choose-right-technology-actualizacion"
+---
+
+Hace unos años escribí un artículo sobre este tema: +
+link:{{< ref "202008-choose-right-technology" >}}[Choose Right Technology].
+
+Con el tiempo, y después de varios proyectos (y varios errores), creo que merece la pena revisarlo con una perspectiva más actual.
+
+Porque si algo he aprendido es esto: elegir tecnología sigue siendo difícil... pero por razones distintas a las de antes.
+
+== Elegir tecnología no falla al principio
+
+Uno de los mayores problemas de las decisiones tecnológicas es que no fallan inmediatamente. De hecho, muchas decisiones parecen buenas durante meses. El problema aparece después:
+
+- Cuando hay que mantener el sistema.
+- Cuando el equipo crece.
+- Cuando hay que escalar.
+- Cuando hay que depurar en producción.
+
+Y ahí es donde una mala elección empieza a doler.
+
+== Tecnología es una decisión de negocio
+
+Durante mucho tiempo traté la elección tecnológica como una decisión puramente técnica: **Error**.
+
+Cada decisión tecnológica impacta directamente en:
+
+* Tiempo de entrega.
+* Coste.
+* Capacidad de iterar.
+* Time-to-market.
+* Capacidad de reaccionar al negocio.
+
+Elegir una tecnología compleja o que no se domina, puede retrasar semanas o meses una entrega.
+
+Y en muchos contextos, llegar antes vale más que llegar perfecto. https://es.wikipedia.org/wiki/Falacia_del_Nirvana[Falacia del Nirvana]: Lo mejor es enemigo de lo bueno.
+
+Un sistema “suficientemente bueno” hoy suele ser más valioso que uno “perfecto” dentro de seis meses.
+
+== Lo que ha cambiado en los últimos años
+
+Antes, elegir tecnología era algo más “técnico”:
+
+- Rendimiento.
+- Lenguaje.
+- Arquitectura.
+
+Hoy ya no es suficiente. Ahora entran en juego cosas como:
+
+- El ecosistema.
+- La capacidad de contratar gente.
+- El coste en cloud.
+- La complejidad operativa.
+- El impacto de herramientas de IA en el desarrollo.
+
+Y, sobre todo:
+
+- La velocidad a la que puedes entregar valor
+
+Es decir: la decisión es mucho más sistémica.
+
+== No elijas tecnología, elige contexto
+
+Uno de los errores más comunes es buscar “la mejor tecnología”. No existe. Lo que existe es la tecnología más adecuada para:
+
+- Tu equipo.
+- Tu problema.
+- Tu momento.
+
+La misma decisión puede ser brillante en una empresa... y desastrosa en otra.
+
+== Cosas que ahora tengo mucho más en cuenta
+
+=== El equipo por encima de todo
+
+He visto "algunos" proyectos sufrir por usar tecnologías que el equipo no dominaba. Hoy lo tengo claro: Si tu equipo conoce bien una tecnología, eso tiene muchísimo valor.
+
+Más que cualquier benchmark.
+
+=== El ecosistema manda
+
+Con el tiempo he dejado de obsesionarme con lenguajes. Lo importante es:
+
+- Librerías.
+- Herramientas.
+- Comunidad.
+- Documentación.
+
+Un buen ecosistema te ahorra meses de trabajo.
+
+=== La complejidad operativa es real
+
+Esto antes lo subestimaba completamente. Ahora siempre me pregunto:
+
+- ¿Cómo se despliega esto?
+- ¿Cómo se monitoriza?
+- ¿Cómo se depura?
+
+Si la respuesta es complicada, es una señal de alerta.
+
+=== El coste ya no es opcional
+
+En entornos cloud, cada decisión técnica tiene impacto directo en el coste. Y no, optimizar después no siempre es fácil. Elegir bien desde el principio importa.
+
+=== IA y productividad
+
+Esto es relativamente nuevo. Las herramientas de desarrollo asistidas por IA están cambiando cómo trabajamos.
+
+Elegir tecnologías que encajen bien con este ecosistema empieza a ser relevante.
+
+== Errores que sigo viendo constantemente
+
+- Empezar con microservicios “por si acaso”.
+- Elegir por hype.
+- Ignorar al equipo.
+- Sobreingeniería desde el día uno.
+- Pensar en escalabilidad antes que en simplicidad.
+
+Nada nuevo... pero siguen pasando.
+
+== Un ejemplo típico
+
+He visto más de una vez esto:
+
+Startup pequeña → arquitectura compleja → microservicios → Kubernetes → problemas.
+
+Resultado:
+
+- Desarrollo lento.
+- Bugs difíciles.
+- Equipo frustrado.
+
+Cuando un monolito simple habría sido suficiente durante bastante tiempo.
+
+== Regla práctica
+
+Si no estás seguro, simplifica. **Siempre**.
+
+La complejidad ya vendrá sola.
+
+== 2026 Update
+
+Si tuviera que resumir todo en una idea: Ya no se trata de elegir la mejor tecnología.
+
+Se trata de elegir la que puedes mantener.
+
+Muchas veces eso significa elegir:
+
+- tecnologías aburridas
+- soluciones probadas
+- herramientas bien soportadas
+
+Y eso está bien.
+
+== Conclusión
+
+Elegir tecnología es una decisión técnica… pero sobre todo es una decisión de contexto.
+
+Cuanto antes entiendas eso, menos dolor tendrás en el futuro.
